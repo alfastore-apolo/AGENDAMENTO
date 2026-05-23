@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0a1628"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Agendamentos"/>
+  <title>Agendamento Escolar</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- Firebase compat (sem módulos, funciona em script normal) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --bg:#0a1628; --bg2:#0f2040; --bg3:#162a55;
+      --accent:#3b82f6; --accent2:#2563eb;
+      --text:#e8f0f8; --muted:#6b93c4;
+      --danger:#e05c5c; --border:rgba(255,255,255,.08);
+      --chip-sel:rgba(59,130,246,.15);
+      --radius:16px;
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-bot:env(safe-area-inset-bottom,0px);
+    }
+    [data-theme="claro"] {
+      --bg:#f0f4ff; --bg2:#ffffff; --bg3:#e2eaf8;
+      --accent:#2563eb; --accent2:#1d4ed8;
+      --text:#1a2540; --muted:#5a7aaa;
+      --danger:#dc2626; --border:rgba(0,0,0,.09);
+      --chip-sel:rgba(37,99,235,.1);
+    }
+    [data-theme="turquesa"] {
+      --bg:#e8fafd; --bg2:#ffffff; --bg3:#cdf4f9;
+      --accent:#0891b2; --accent2:#0e7490;
+      --text:#0c3a45; --muted:#3a8fa3;
+      --danger:#dc2626; --border:rgba(8,145,178,.15);
+      --chip-sel:rgba(6,182,212,.12);
+    }
+    [data-theme="escuro"] {
+      --bg:#0d0d0d; --bg2:#181818; --bg3:#242424;
+      --accent:#a78bfa; --accent2:#7c3aed;
+      --text:#f0f0f0; --muted:#777;
+      --danger:#e05c5c; --border:rgba(255,255,255,.07);
+      --chip-sel:rgba(167,139,250,.15);
+    }
+    [data-theme="rosa"] {
+      --bg:#fff0f6; --bg2:#ffffff; --bg3:#ffd6e8;
+      --accent:#db2777; --accent2:#be185d;
+      --text:#4a1230; --muted:#be6891;
+      --danger:#dc2626; --border:rgba(219,39,119,.14);
+      --chip-sel:rgba(219,39,119,.1);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;transition:background .35s,color .35s}
+    #app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
+
+    header{padding:calc(var(--safe-top) + 16px) 16px 12px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;transition:background .35s,border-color .35s}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .35s}
+    .logo-text h1{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text)}
+    .logo-text span{font-size:11px;color:var(--muted)}
+
+    .btn-theme{background:var(--bg3);border:1.5px solid var(--border);border-radius:22px;padding:7px 14px;color:var(--text);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;display:flex;align-items:center;gap:7px;transition:background .35s,border-color .35s,transform .1s}
+    .btn-theme:active{transform:scale(.96)}
+    .theme-dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));flex-shrink:0;box-shadow:0 0 0 2px var(--bg3),0 0 0 3.5px var(--accent)}
+
+    .tab-bar{display:flex;gap:6px}
+    .tab{flex:1;padding:8px;border-radius:10px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+    .tab.active{background:var(--chip-sel);color:var(--accent)}
+
+    #content{flex:1;overflow-y:auto;padding:18px 16px calc(var(--safe-bot) + 18px);-webkit-overflow-scrolling:touch}
+    .screen{display:none;animation:fadeIn .22s ease}
+    .screen.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+    .form-section{margin-bottom:18px}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:9px;padding-left:4px}
+    .field{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:9px;transition:border-color .2s,background .35s}
+    .field:focus-within{border-color:var(--accent)}
+    .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500}
+    .field input,.field textarea{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:0;appearance:none;-webkit-appearance:none}
+    .field textarea{resize:none;line-height:1.5}
+    .field input[type="date"],.field input[type="time"]{color-scheme:dark}
+    [data-theme="claro"] .field input[type="date"],
+    [data-theme="claro"] .field input[type="time"],
+    [data-theme="turquesa"] .field input[type="date"],
+    [data-theme="turquesa"] .field input[type="time"],
+    [data-theme="rosa"] .field input[type="date"],
+    [data-theme="rosa"] .field input[type="time"]{color-scheme:light}
+
+    .ambiente-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+    .chip{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:11px 10px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
+    .chip-icon{font-size:18px}
+    .chip.selected{border-color:var(--accent);background:var(--chip-sel);color:var(--text)}
+    .chip-outros{grid-column:span 2;justify-content:center}
+
+    .btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-submit:active{transform:scale(.98);opacity:.9}
+    .btn-submit:disabled{opacity:.5;cursor:default}
+
+    #toast{position:fixed;bottom:calc(var(--safe-bot) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:30px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;z-index:300;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    #toast.error{border-color:var(--danger)}
+
+    .realtime-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--accent);background:var(--chip-sel);padding:4px 12px;border-radius:20px;margin-bottom:12px;font-weight:600}
+    .realtime-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:rtpulse 1.5s ease-in-out infinite}
+    @keyframes rtpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+
+    .agenda-empty{text-align:center;padding:50px 20px;color:var(--muted)}
+    .agenda-empty .empty-icon{font-size:44px;margin-bottom:10px}
+    .agenda-empty p{font-size:14px;line-height:1.5}
+
+    .agenda-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:15px;margin-bottom:9px;position:relative;overflow:hidden;animation:fadeIn .3s ease;transition:background .35s,border-color .35s}
+    .agenda-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px;transition:background .35s}
+    .agenda-item-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px}
+    .agenda-item-title{font-weight:600;font-size:15px;color:var(--text)}
+    .agenda-item-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-bottom:5px}
+    .agenda-item-prof{font-size:13px;color:var(--accent);margin-bottom:4px;font-weight:500}
+    .agenda-item-desc{font-size:13px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .btn-delete{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:2px;transition:color .2s;flex-shrink:0}
+    .btn-delete:active{color:var(--danger)}
+
+    .filter-bar{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:3px}
+    .filter-bar::-webkit-scrollbar{display:none}
+    .filter-chip{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .filter-chip.active{background:var(--chip-sel);border-color:var(--accent);color:var(--accent)}
+
+    #install-banner{display:none;margin-bottom:14px;background:var(--chip-sel);border:1px solid var(--accent);border-radius:var(--radius);padding:13px 15px;align-items:center;gap:10px}
+    #install-banner.show{display:flex}
+    .install-text{flex:1;font-size:13px;line-height:1.4;color:var(--text)}
+    .install-text strong{color:var(--accent)}
+    .btn-install{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0}
+    .btn-dismiss{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer}
+
+    /* Modal temas */
+    #theme-modal{display:none;position:fixed;inset:0;z-index:200;align-items:flex-end;justify-content:center}
+    #theme-modal.open{display:flex}
+    .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+    .modal-sheet{position:relative;z-index:1;background:var(--bg2);border-radius:22px 22px 0 0;padding:20px 16px calc(var(--safe-bot) + 28px);width:100%;max-width:480px;animation:slideUp .25s ease;transition:background .35s}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+    .modal-title{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;text-align:center}
+    .theme-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .theme-opt{border-radius:16px;padding:14px;cursor:pointer;border:2.5px solid transparent;transition:border-color .18s,transform .1s;position:relative}
+    .theme-opt:active{transform:scale(.97)}
+    .theme-opt.sel{border-color:var(--accent) !important;box-shadow:0 0 0 1px var(--accent)}
+    .check-mark{position:absolute;top:9px;right:9px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;display:none;align-items:center;justify-content:center;font-weight:700}
+    .theme-opt.sel .check-mark{display:flex}
+    .theme-opt-preview{height:36px;border-radius:10px;margin-bottom:10px}
+    .theme-opt-label{font-size:14px;font-weight:700;margin-bottom:2px}
+    .theme-opt-sub{font-size:11px;opacity:.75}
+
+    .spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">📅</div>
+        <div class="logo-text">
+          <h1>CETI Dariana</h1>
+          <span>Agendamentos</span>
+        </div>
+      </div>
+      <button class="btn-theme" onclick="openThemeModal()">
+        <div class="theme-dot"></div>
+        <span id="theme-label-btn">🔵 Azul</span>
+      </button>
+    </div>
+    <div class="tab-bar">
+      <button class="tab active" id="tab-novo" onclick="showScreen('novo')">➕ Nova Reserva</button>
+      <button class="tab" id="tab-lista" onclick="showScreen('lista')">📋 Reservas</button>
+    </div>
+  </header>
+
+  <div id="content">
+    <!-- Nova Reserva -->
+    <div class="screen active" id="screen-novo">
+      <div id="install-banner">
+        <div class="install-text"><strong>Instalar app</strong><br>Adicione à tela inicial para acesso rápido.</div>
+        <button class="btn-install" id="btn-install-pwa">Instalar</button>
+        <button class="btn-dismiss" onclick="dismissInstall()">×</button>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Ambiente</div>
+        <div class="ambiente-chips">
+          <div class="chip selected" data-value="Biblioteca"      onclick="selectAmbiente(this)"><span class="chip-icon">📚</span> Biblioteca</div>
+          <div class="chip"          data-value="Lab. Informática" onclick="selectAmbiente(this)"><span class="chip-icon">💻</span> Lab. Informática</div>
+          <div class="chip"          data-value="Sala Maker"    onclick="selectAmbiente(this)"><span class="chip-icon">🛠️</span> Sala Maker</div>
+          <div class="chip"          data-value="Piscina"          onclick="selectAmbiente(this)"><span class="chip-icon">🏊</span> Piscina</div>
+          <div class="chip chip-outros" data-value="Outros"        onclick="selectAmbiente(this)"><span class="chip-icon">➕</span> Outros...</div>
+        </div>
+        <div class="field" id="campo-outros" style="display:none">
+          <label>Especifique o ambiente</label>
+          <input type="text" id="detalheAmbiente" placeholder="Ex: Horta, Auditório…"/>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Data e Horário</div>
+        <div class="field"><label>Data</label><input type="date" id="data"/></div>
+        <div class="field"><label>Horário</label><input type="time" id="horario"/></div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Detalhes</div>
+        <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
+        <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
+        <div class="field">
+          <label>Descrição / Observações</label>
+          <textarea id="descricao" rows="3" placeholder="Detalhes da atividade, materiais…"></textarea>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-salvar" onclick="salvarAgendamento()">
+        <span>Confirmar Reserva</span>
+      </button>
+    </div>
+
+    <!-- Lista -->
+    <div class="screen" id="screen-lista">
+      <div class="realtime-badge"><div class="realtime-dot"></div> Atualização em tempo real</div>
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filtrar(this,'')">Todos</button>
+        <button class="filter-chip" onclick="filtrar(this,'Biblioteca')">📚 Biblioteca</button>
+        <button class="filter-chip" onclick="filtrar(this,'Lab. Informática')">💻 Informática</button>
+        <button class="filter-chip" onclick="filtrar(this,'Sala Maker')">🛠️ Sala Maker</button>
+        <button class="filter-chip" onclick="filtrar(this,'Piscina')">🏊 Piscina</button>
+      </div>
+      <div id="lista-agendamentos">
+        <div class="agenda-empty"><div class="empty-icon">🔄</div><p>Conectando…</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Temas -->
+<div id="theme-modal">
+  <div class="modal-backdrop" onclick="closeThemeModal()"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Escolha o Tema</div>
+    <div class="theme-options">
+
+      <div class="theme-opt sel" id="opt-azul" onclick="setTheme('azul')" style="background:#0f2040">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"></div>
+        <div class="theme-opt-label" style="color:#e8f0f8">🔵 Azul</div>
+        <div class="theme-opt-sub"   style="color:#6b93c4">Padrão escuro azul</div>
+      </div>
+
+      <div class="theme-opt" id="opt-claro" onclick="setTheme('claro')" style="background:#f0f4ff">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)"></div>
+        <div class="theme-opt-label" style="color:#1a2540">☀️ Claro</div>
+        <div class="theme-opt-sub"   style="color:#5a7aaa">Fundo branco e azul</div>
+      </div>
+
+      <div class="theme-opt" id="opt-turquesa" onclick="setTheme('turquesa')" style="background:#e8fafd">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#06b6d4,#0891b2)"></div>
+        <div class="theme-opt-label" style="color:#0c3a45">🩵 Turquesa</div>
+        <div class="theme-opt-sub"   style="color:#3a8fa3">Azul turquesa claro</div>
+      </div>
+
+      <div class="theme-opt" id="opt-escuro" onclick="setTheme('escuro')" style="background:#181818">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)"></div>
+        <div class="theme-opt-label" style="color:#f0f0f0">🌙 Escuro</div>
+        <div class="theme-opt-sub"   style="color:#888">Preto com roxo</div>
+      </div>
+
+      <div class="theme-opt" id="opt-rosa" onclick="setTheme('rosa')" style="background:#fff0f6;grid-column:span 2">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#ec4899,#db2777)"></div>
+        <div class="theme-opt-label" style="color:#4a1230">🌸 Rosa</div>
+        <div class="theme-opt-sub"   style="color:#be6891">Fundo rosa suave</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ════════════════════════════════════════════════════════════════════════
+  // CONFIGURAÇÃO FIREBASE — substitua com suas credenciais
+  // ════════════════════════════════════════════════════════════════════════
+  var firebaseConfig = {
+    apiKey:            "AIzaSyDPV_P3mgANJJB-DaDpRlfwuoyjBDmAb6w",
+    authDomain:        "agendamento-4c83a.firebaseapp.com",
+    projectId:         "agendamento-4c83a",
+    storageBucket:     "agendamento-4c83a.firebasestorage.app",
+    messagingSenderId: "122001604104",
+    appId:             "1:122001604104:web:50f6aa7a4faa6ca3429bbd"
+  };
+  // ════════════════════════════════════════════════════════════════════════
+
+  // Inicializa Firebase
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  // ── Estado ──────────────────────────────────────────────────────────────
+  var ambienteSelecionado = 'Biblioteca';
+  var filtroAtivo         = '';
+  var todosItens          = [];
+  var rtStarted           = false;
+  var deferredPrompt      = null;
+
+  // ── Temas ────────────────────────────────────────────────────────────────
+  var TEMAS = {
+    azul:     { attr:'',         emoji:'🔵', label:'Azul'     },
+    claro:    { attr:'claro',    emoji:'☀️',  label:'Claro'    },
+    turquesa: { attr:'turquesa', emoji:'🩵',  label:'Turquesa' },
+    escuro:   { attr:'escuro',   emoji:'🌙',  label:'Escuro'   },
+    rosa:     { attr:'rosa',     emoji:'🌸',  label:'Rosa'     }
+  };
+
+  function openThemeModal()  { document.getElementById('theme-modal').classList.add('open'); }
+  function closeThemeModal() { document.getElementById('theme-modal').classList.remove('open'); }
+
+  function setTheme(theme) {
+    var info = TEMAS[theme] || TEMAS.azul;
+    document.documentElement.setAttribute('data-theme', info.attr);
+    document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
+    var el = document.getElementById('opt-' + theme);
+    if (el) el.classList.add('sel');
+    document.getElementById('theme-label-btn').textContent = info.emoji + ' ' + info.label;
+    localStorage.setItem('tema', theme);
+    closeThemeModal();
+  }
+
+  // Restaurar tema salvo
+  (function () {
+    var t    = localStorage.getItem('tema') || 'azul';
+    var info = TEMAS[t] || TEMAS.azul;
+    document.documentElement.setAttribute('data-theme', info.attr);
+    document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
+    var el = document.getElementById('opt-' + t);
+    if (el) el.classList.add('sel');
+    document.getElementById('theme-label-btn').textContent = info.emoji + ' ' + info.label;
+  })();
+
+  // ── Navegação ────────────────────────────────────────────────────────────
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('screen-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'lista') iniciarTempoReal();
+  }
+
+  // ── Ambiente ─────────────────────────────────────────────────────────────
+  function selectAmbiente(el) {
+    document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    ambienteSelecionado = el.dataset.value;
+    document.getElementById('campo-outros').style.display =
+      ambienteSelecionado === 'Outros' ? 'block' : 'none';
+  }
+
+  // ── Filtros ──────────────────────────────────────────────────────────────
+  function filtrar(el, value) {
+    filtroAtivo = value;
+    document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+    el.classList.add('active');
+    renderLista();
+  }
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  function showToast(msg, tipo) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (tipo ? ' ' + tipo : '');
+    setTimeout(function() { el.className = ''; }, 3000);
+  }
+
+  // ── Render Lista ─────────────────────────────────────────────────────────
+  function renderLista() {
+    var container = document.getElementById('lista-agendamentos');
+    var list = filtroAtivo
+      ? todosItens.filter(function(i) { return i.ambiente === filtroAtivo; })
+      : todosItens;
+
+    if (!list.length) {
+      container.innerHTML = '<div class="agenda-empty"><div class="empty-icon">📭</div><p>Nenhuma reserva encontrada.</p></div>';
+      return;
+    }
+
+    var ic = { 'Biblioteca':'📚','Lab. Informática':'💻','Sala Maker':'🛠️','Piscina':'🏊' };
+    container.innerHTML = list.map(function(item) {
+      var icon = ic[item.ambiente] || '📍';
+      var df = item.data
+        ? new Date(item.data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' })
+        : '—';
+      return '<div class="agenda-item">' +
+        '<div class="agenda-item-header">' +
+          '<div class="agenda-item-title">' + icon + ' ' + item.ambiente + '</div>' +
+          '<button class="btn-delete" onclick="excluir(\'' + item.id + '\')">🗑</button>' +
+        '</div>' +
+        '<div class="agenda-item-meta">' +
+          '<span>📅 ' + df + '</span>' +
+          '<span>⏰ ' + (item.horario || '—') + '</span>' +
+          (item.turma ? '<span>👥 ' + item.turma + '</span>' : '') +
+        '</div>' +
+        '<div class="agenda-item-prof">👤 ' + (item.professor || '—') + '</div>' +
+        (item.descricao ? '<div class="agenda-item-desc">' + item.descricao + '</div>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Tempo Real (onSnapshot — atualiza para todos simultaneamente) ─────────
+  function iniciarTempoReal() {
+    if (rtStarted) return;
+    rtStarted = true;
+    db.collection('agendamentos')
+      .orderBy('criado_em', 'desc')
+      .onSnapshot(function(snap) {
+        todosItens = [];
+        snap.forEach(function(d) {
+          todosItens.push(Object.assign({ id: d.id }, d.data()));
+        });
+        renderLista();
+      }, function(err) {
+        document.getElementById('lista-agendamentos').innerHTML =
+          '<div class="agenda-empty"><div class="empty-icon">⚠️</div><p>Erro: ' + err.message + '</p></div>';
+      });
+  }
+
+  // ── Salvar ───────────────────────────────────────────────────────────────
+  function salvarAgendamento() {
+    var data      = document.getElementById('data').value;
+    var horario   = document.getElementById('horario').value;
+    var professor = document.getElementById('professor').value.trim();
+
+    if (!data || !horario || !professor) {
+      showToast('Preencha data, horário e nome do professor.', 'error');
+      return;
+    }
+
+    var ambiente = ambienteSelecionado === 'Outros'
+      ? (document.getElementById('detalheAmbiente').value.trim() || 'Outros')
+      : ambienteSelecionado;
+
+    var btn = document.getElementById('btn-salvar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Salvando…';
+
+    db.collection('agendamentos').add({
+      ambiente:  ambiente,
+      professor: professor,
+      turma:     document.getElementById('turma').value.trim(),
+      data:      data,
+      horario:   horario,
+      descricao: document.getElementById('descricao').value.trim(),
+      criado_em: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      showToast('✅ Reserva confirmada!');
+      ['data','horario','professor','turma','descricao','detalheAmbiente'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
+      document.querySelectorAll('.chip').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
+      ambienteSelecionado = 'Biblioteca';
+      document.getElementById('campo-outros').style.display = 'none';
+      document.getElementById('data').valueAsDate = new Date();
+    }).catch(function(e) {
+      showToast('Erro ao salvar: ' + e.message, 'error');
+    }).finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Confirmar Reserva</span>';
+    });
+  }
+
+  // ── Excluir ──────────────────────────────────────────────────────────────
+  function excluir(id) {
+    if (!confirm('Excluir esta reserva?')) return;
+    db.collection('agendamentos').doc(id).delete()
+      .then(function() { showToast('Reserva excluída.'); })
+      .catch(function() { showToast('Erro ao excluir.', 'error'); });
+  }
+
+  // ── PWA ──────────────────────────────────────────────────────────────────
+  function dismissInstall() { document.getElementById('install-banner').classList.remove('show'); }
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault(); deferredPrompt = e;
+    document.getElementById('install-banner').classList.add('show');
+  });
+  document.getElementById('btn-install-pwa').addEventListener('click', function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function() { deferredPrompt = null; dismissInstall(); });
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  document.getElementById('data').valueAsDate = new Date();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
+</script>
+</body>
+</html>
