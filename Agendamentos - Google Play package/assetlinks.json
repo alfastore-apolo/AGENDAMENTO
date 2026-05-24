@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "app.web.ceti_dariana_agendamentos.twa",
-        "sha256_cert_fingerprints": ["A7:1E:89:59:64:7C:55:88:76:78:1A:9D:51:0C:AC:25:B4:9B:35:12:8C:51:AF:BB:60:29:85:36:F0:24:C6:A0"]
-      }
-    }]
