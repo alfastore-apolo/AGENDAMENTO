@@ -120,25 +120,11 @@
     .btn-submit:active{transform:scale(.98);opacity:.9}
     .btn-submit:disabled{opacity:.5;cursor:default}
 
-    /* Relógios Digitais Duplos */
-    .relogios-container{display:flex;flex-direction:column;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:9px}
-    .relogio-duplo{display:flex;align-items:center;gap:10px;justify-content:space-between}
-    .relogio-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px}
-    .relogio-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-    .relogio-display{font-family:'DM Serif Display',serif;font-size:36px;letter-spacing:2px;color:var(--accent);line-height:1;display:flex;align-items:center;gap:2px}
-    .relogio-sep{animation:blink 1s step-end infinite;opacity:1}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-    .relogio-controles{display:flex;gap:6px;align-items:center}
-    .relogio-btn{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:32px;height:28px;color:var(--accent);font-size:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-weight:600}
-    .relogio-btn:active{background:var(--chip-sel);transform:scale(.92)}
-    .relogio-seta{font-size:20px;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:arrowPulse 1.5s ease-in-out infinite}
-    @keyframes arrowPulse{0%,100%{opacity:.6;transform:translateX(0)}50%{opacity:1;transform:translateX(2px)}}
-    .duracao-info{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px}
-    .duracao-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-    .duracao-valor{font-size:14px;color:var(--accent);font-weight:600;font-family:'DM Serif Display',serif}
-
+    /* Relógio Digital */
+    .relogio-digital{display:flex;align-items:center;justify-content:space-between;padding:14px 15px;gap:14px}
     .rd-display{font-family:'DM Serif Display',serif;font-size:42px;letter-spacing:4px;color:var(--accent);line-height:1;display:flex;align-items:center;gap:4px;min-width:120px}
     .rd-sep{animation:blink 1s step-end infinite;opacity:1}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
     .rd-pickers{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end}
     .rd-col{display:flex;flex-direction:column;align-items:center;gap:5px}
     .rd-arrow{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;width:36px;height:30px;color:var(--accent);font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
@@ -218,867 +204,940 @@
     .toggle-switch input:checked + .toggle-slider::before{transform:translateX(20px)}
 
     /* ── ADMIN MODALS ── */
-    .admin-overlay{display:none;position:fixed;inset:0;z-index:1999;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+    .admin-overlay{display:none;position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;animation:fadeIn .2s ease}
     .admin-overlay.open{display:flex}
-    .admin-card{background:var(--bg2);border-radius:20px;padding:28px 24px;width:90%;max-width:360px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .3s ease}
-    @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-    .admin-close{position:absolute;top:12px;right:12px;background:none;border:none;font-size:28px;color:var(--muted);cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;transition:color .2s}
-    .admin-close:active{color:var(--text)}
-    .admin-shield{font-size:48px;text-align:center;margin-bottom:16px}
-    .admin-title{font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--text);text-align:center;margin-bottom:6px}
-    .admin-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:18px}
-    .admin-error{display:none;background:rgba(224,92,92,.15);border:1px solid var(--danger);color:var(--danger);padding:10px 12px;border-radius:10px;font-size:12px;margin-bottom:14px;text-align:center;font-weight:500}
-    .admin-error.show{display:block}
-    .admin-field{margin-bottom:16px}
-    .admin-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-    .admin-field input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
-    .admin-field input:focus{border-color:var(--accent)}
-    .admin-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s}
+    .admin-card{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:28px 24px 24px;width:calc(100% - 48px);max-width:340px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:slideUp .25s ease}
+    .admin-shield{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px}
+    .admin-title{text-align:center;font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);margin-bottom:4px}
+    .admin-sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px}
+    .admin-field{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:12px;transition:border-color .2s}
+    .admin-field:focus-within{border-color:var(--accent)}
+    .admin-field label{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+    .admin-field input{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px}
+    .admin-field input::placeholder{color:var(--muted);opacity:.5}
+    .admin-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;margin-top:4px}
     .admin-btn:active{transform:scale(.98);opacity:.9}
+    .admin-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+    .admin-error{color:var(--danger);font-size:12px;text-align:center;margin-bottom:10px;display:none}
+    .admin-error.show{display:block}
+    .admin-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+    .admin-info-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:9px}
+    .admin-info-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+    .admin-info-value{font-size:13px;color:var(--text);font-weight:500;font-family:monospace}
+    .admin-copy{background:none;border:none;color:var(--accent);font-size:13px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:background .15s}
+    .admin-copy:active{background:var(--chip-sel)}
 
-    /* Modal de conflito */
-    #conflito-modal{display:none;position:fixed;inset:0;z-index:1998;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
-    #conflito-modal.open{display:flex}
-    .conflito-card{background:var(--bg2);border-radius:20px;padding:28px 24px;width:90%;max-width:360px;text-align:center;animation:popIn .3s ease}
-    .conflito-icone{font-size:48px;margin-bottom:12px}
-    .conflito-titulo{font-family:'DM Serif Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:12px}
-    .conflito-info{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
-    .conflito-dica{font-size:12px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:16px}
-    .conflito-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s}
-    .conflito-btn:active{transform:scale(.98);opacity:.9}
+  
+  /* ── ALFA STORE FOOTER FIXO ── */
+  .alfa-footer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: transparent;
+    border-top: none;
+    padding: .4rem 1rem .5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    z-index: 999;
+  }
+  .alfa-footer-text { text-align: center; }
+  .alfa-dev-label {
+    font-size: .65rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .01em;
+    opacity: .7;
+  }
+  .alfa-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    background: transparent;
+    color: #25D366;
+    font-size: .68rem;
+    font-weight: 600;
+    padding: 0;
+    border-radius: 0;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: none;
+    width: auto;
+    opacity: .85;
+  }
+  /* push content up so footer doesn't cover it */
+  #app { padding-bottom: 52px; }
 
-    /* Modal aviso de período */
-    #aviso-periodo-modal{display:none;position:fixed;inset:0;z-index:1998;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
-    .aviso-card{background:var(--bg2);border-radius:20px;padding:28px 24px;width:90%;max-width:360px;animation:popIn .3s ease}
-    .aviso-icone{font-size:48px;text-align:center;margin-bottom:12px}
-    .aviso-titulo{font-family:'DM Serif Display',serif;font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:12px}
-    .aviso-info{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;text-align:center}
-    .aviso-buttons{display:flex;gap:10px}
-    .aviso-btn{flex:1;padding:12px;background:var(--bg3);border:1.5px solid var(--border);color:var(--text);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-    .aviso-btn:active{transform:scale(.97)}
-    .aviso-btn.confirm{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:var(--accent)}
-
-    /* Alfa Store Footer */
-    .alfa-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--bg3);border-top:1px solid var(--border);font-size:11px;color:var(--muted);flex-wrap:wrap}
-    .alfa-footer-text{flex:1;min-width:0}
-    .alfa-dev-label{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .alfa-whatsapp{display:flex;align-items:center;gap:6px;color:var(--accent);text-decoration:none;font-weight:600;transition:opacity .2s;flex-shrink:0}
-    .alfa-whatsapp:active{opacity:.7}
-  </style>
+</style>
 </head>
-
 <body>
-  <div id="app">
-    <header>
-      <div class="header-top">
-        <div class="logo">
-          <div class="logo-icon">📅</div>
-          <div class="logo-text">
-            <h1>CETI Dariana</h1>
-            <span>Agendamentos</span>
-          </div>
-        </div>
-        <div class="theme-dots-bar">
-          <button class="tdot" id="tdot-claro"    onclick="setThemeDirect('claro')"    title="Branco e Azul"      style="background:linear-gradient(135deg,#ffffff,#2563eb)"></button>
-          <button class="tdot" id="tdot-escuro" onclick="setThemeDirect('escuro')" title="Preto Colorido" style="background:#0d0d0d"></button>
-          <button class="tdot" id="tdot-turquesa" onclick="setThemeDirect('turquesa')" title="Branco e Azul Claro"  style="background:#ffffff;border-color:#d1d5db"></button>
-          <button class="tdot" id="tdot-rosa"     onclick="setThemeDirect('rosa')"     title="Rosa Claro"          style="background:linear-gradient(135deg,#ffe4ef,#f9a8d4)"></button>
+
+<div id="firebase-erro" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#e05c5c;color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;">
+  ⚠️ Sem conexão com o servidor Firebase. Verifique sua internet.
+</div>
+
+<div id="app">
+  <header>
+    <!-- Ícone oculto Admin — canto inferior esquerdo, 3 cliques -->
+
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">📅</div>
+        <div class="logo-text">
+          <h1>CETI Dariana</h1>
+          <span>Agendamentos</span>
         </div>
       </div>
-      <div class="tab-bar">
-        <button class="tab active" id="tab-novo" onclick="showScreen('novo')">➕ Nova Reserva</button>
-        <button class="tab" id="tab-lista" onclick="showScreen('lista')">📋 Reservas</button>
+      <div class="theme-dots-bar">
+        <button class="tdot" id="tdot-claro"    onclick="setThemeDirect('claro')"    title="Branco e Azul"      style="background:linear-gradient(135deg,#ffffff,#2563eb)"></button>
+        <button class="tdot" id="tdot-escuro" onclick="setThemeDirect('escuro')" title="Preto Colorido" style="background:#0d0d0d"></button>
+        <button class="tdot" id="tdot-turquesa" onclick="setThemeDirect('turquesa')" title="Branco e Azul Claro"  style="background:#ffffff;border-color:#d1d5db"></button>
+        <button class="tdot" id="tdot-rosa"     onclick="setThemeDirect('rosa')"     title="Rosa Claro"          style="background:linear-gradient(135deg,#ffe4ef,#f9a8d4)"></button>
       </div>
-    </header>
+    </div>
+    <div class="tab-bar">
+      <button class="tab active" id="tab-novo" onclick="showScreen('novo')">➕ Nova Reserva</button>
+      <button class="tab" id="tab-lista" onclick="showScreen('lista')">📋 Reservas</button>
+    </div>
+  </header>
 
-    <div id="content">
-      <!-- Nova Reserva -->
-      <div class="screen active" id="screen-novo">
-        <div id="install-banner">
-          <div class="install-text"><strong>Instalar app</strong><br>Adicione à tela inicial para acesso rápido.</div>
-          <button class="btn-install" id="btn-install-pwa">Instalar</button>
-          <button class="btn-dismiss" onclick="dismissInstall()">×</button>
+  <div id="content">
+    <!-- Nova Reserva -->
+    <div class="screen active" id="screen-novo">
+      <div id="install-banner">
+        <div class="install-text"><strong>Instalar app</strong><br>Adicione à tela inicial para acesso rápido.</div>
+        <button class="btn-install" id="btn-install-pwa">Instalar</button>
+        <button class="btn-dismiss" onclick="dismissInstall()">×</button>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Ambiente</div>
+        <div class="ambiente-chips">
+          <div class="chip selected" data-value="Biblioteca"      onclick="selectAmbiente(this)"><span class="chip-icon">📚</span> Biblioteca</div>
+          <div class="chip"          data-value="Lab. Informática" onclick="selectAmbiente(this)"><span class="chip-icon">💻</span> Lab. Informática</div>
+          <div class="chip"          data-value="Lab. Ciências"   onclick="selectAmbiente(this)"><span class="chip-icon">🔬</span> Lab. Ciências</div>
+          <div class="chip"          data-value="Sala Maker"    onclick="selectAmbiente(this)"><span class="chip-icon">🛠️</span> Sala Maker</div>
+          <div class="chip"          data-value="Piscina"          onclick="selectAmbiente(this)"><span class="chip-icon">🏊</span> Piscina</div>
+          <div class="chip"          data-value="Auditório"        onclick="selectAmbiente(this)"><span class="chip-icon">🎭</span> Auditório</div>
+          <div class="chip chip-outros" data-value="Outros"        onclick="selectAmbiente(this)"><span class="chip-icon">➕</span> Outros...</div>
         </div>
-
-        <div class="form-section">
-          <div class="section-label">Ambiente</div>
-          <div class="ambiente-chips">
-            <div class="chip selected" data-value="Biblioteca"      onclick="selectAmbiente(this)"><span class="chip-icon">📚</span> Biblioteca</div>
-            <div class="chip"          data-value="Lab. Informática" onclick="selectAmbiente(this)"><span class="chip-icon">💻</span> Lab. Informática</div>
-            <div class="chip"          data-value="Lab. Ciências"   onclick="selectAmbiente(this)"><span class="chip-icon">🔬</span> Lab. Ciências</div>
-            <div class="chip"          data-value="Sala Maker"    onclick="selectAmbiente(this)"><span class="chip-icon">🛠️</span> Sala Maker</div>
-            <div class="chip"          data-value="Piscina"          onclick="selectAmbiente(this)"><span class="chip-icon">🏊</span> Piscina</div>
-            <div class="chip"          data-value="Auditório"        onclick="selectAmbiente(this)"><span class="chip-icon">🎭</span> Auditório</div>
-            <div class="chip chip-outros" data-value="Outros"        onclick="selectAmbiente(this)"><span class="chip-icon">➕</span> Outros...</div>
-          </div>
-          <div class="field" id="campo-outros" style="display:none">
-            <label>Especifique o ambiente</label>
-            <input type="text" id="detalheAmbiente" placeholder="Ex: Horta, Auditório…"/>
-          </div>
+        <div class="field" id="campo-outros" style="display:none">
+          <label>Especifique o ambiente</label>
+          <input type="text" id="detalheAmbiente" placeholder="Ex: Horta, Auditório…"/>
         </div>
+      </div>
 
-        <div class="form-section">
-          <div class="section-label">Data e Horário</div>
-          <div class="field"><label>Data</label><input type="date" id="data"/></div>
-          
-          <!-- Relógios Digitais Duplos -->
-          <div class="relogios-container">
-            <div class="relogio-duplo">
-              <!-- Relógio Início -->
-              <div class="relogio-card">
-                <div class="relogio-label">Início</div>
-                <div class="relogio-display">
-                  <span id="rd-inicio-hh">10</span><span class="relogio-sep">:</span><span id="rd-inicio-mm">00</span>
-                </div>
-                <div class="relogio-controles">
-                  <button class="relogio-btn" onclick="rdStepInicio(5)">+</button>
-                  <button class="relogio-btn" onclick="rdStepInicio(-5)">−</button>
-                </div>
-              </div>
-
-              <!-- Seta -->
-              <div class="relogio-seta">→</div>
-
-              <!-- Relógio Fim -->
-              <div class="relogio-card">
-                <div class="relogio-label">Término</div>
-                <div class="relogio-display">
-                  <span id="rd-fim-hh">12</span><span class="relogio-sep">:</span><span id="rd-fim-mm">00</span>
-                </div>
-                <div class="relogio-controles">
-                  <button class="relogio-btn" onclick="rdStepFim(5)">+</button>
-                  <button class="relogio-btn" onclick="rdStepFim(-5)">−</button>
-                </div>
-              </div>
+      <div class="form-section">
+        <div class="section-label">Data e Horário</div>
+        <div class="field"><label>Data</label><input type="date" id="data"/></div>
+        <!-- Relógio Digital -->
+        <div class="field" style="padding:0;overflow:hidden">
+          <input type="hidden" id="horario"/>
+          <div class="relogio-digital">
+            <div class="rd-display">
+              <span id="rd-hh">--</span>
+              <span class="rd-sep">:</span>
+              <span id="rd-mm">--</span>
             </div>
-
-            <!-- Duração -->
-            <div class="duracao-info">
-              <div class="duracao-label">Duração:</div>
-              <div class="duracao-valor" id="duracao-display">2h 00m</div>
+            <div class="rd-pickers">
+              <div class="rd-col">
+                <button class="rd-arrow" onclick="rdStep('h',1)">▲</button>
+                <div class="rd-label">Hora</div>
+                <button class="rd-arrow" onclick="rdStep('h',-1)">▼</button>
+              </div>
+              <div class="rd-col">
+                <button class="rd-arrow" onclick="rdStep('m',5)">▲</button>
+                <div class="rd-label">Min</div>
+                <button class="rd-arrow" onclick="rdStep('m',-5)">▼</button>
+              </div>
+              <button class="rd-now" onclick="rdAgora()">Agora</button>
             </div>
           </div>
-
-          <!-- Hidden inputs -->
-          <input type="hidden" id="horarioInicio"/>
-          <input type="hidden" id="horarioFim"/>
         </div>
-
-        <div class="form-section">
-          <div class="section-label">Detalhes</div>
-          <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
-          <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
-          <div class="field">
-            <label>Descrição / Observações</label>
-            <textarea id="descricao" rows="3" placeholder="Detalhes da atividade, materiais…"></textarea>
-          </div>
-        </div>
-
-        <button class="btn-submit" id="btn-salvar" onclick="salvarAgendamento()">
-          <span>Confirmar Reserva</span>
-        </button>
       </div>
 
-      <!-- Lista -->
-      <div class="screen" id="screen-lista">
-        <div class="realtime-badge"><div class="realtime-dot"></div> Atualização em tempo real</div>
-        <div class="filter-bar">
-          <button class="filter-chip active" onclick="filtrar(this,'')">Todos</button>
-          <button class="filter-chip" onclick="filtrar(this,'Biblioteca')">📚 Biblioteca</button>
-          <button class="filter-chip" onclick="filtrar(this,'Lab. Informática')">💻 Informática</button>
-          <button class="filter-chip" onclick="filtrar(this,'Lab. Ciências')">🔬 Ciências</button>
-          <button class="filter-chip" onclick="filtrar(this,'Sala Maker')">🛠️ Sala Maker</button>
-          <button class="filter-chip" onclick="filtrar(this,'Piscina')">🏊 Piscina</button>
-          <button class="filter-chip" onclick="filtrar(this,'Auditório')">🎭 Auditório</button>
+      <div class="form-section">
+        <div class="section-label">Detalhes</div>
+        <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
+        <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
+        <div class="field">
+          <label>Descrição / Observações</label>
+          <textarea id="descricao" rows="3" placeholder="Detalhes da atividade, materiais…"></textarea>
         </div>
-        <div id="lista-agendamentos">
-          <div class="agenda-empty"><div class="empty-icon">🔄</div><p>Conectando…</p></div>
-        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-salvar" onclick="salvarAgendamento()">
+        <span>Confirmar Reserva</span>
+      </button>
+    </div>
+
+    <!-- Lista -->
+    <div class="screen" id="screen-lista">
+      <div class="realtime-badge"><div class="realtime-dot"></div> Atualização em tempo real</div>
+      <div class="filter-bar">
+        <button class="filter-chip active" onclick="filtrar(this,'')">Todos</button>
+        <button class="filter-chip" onclick="filtrar(this,'Biblioteca')">📚 Biblioteca</button>
+        <button class="filter-chip" onclick="filtrar(this,'Lab. Informática')">💻 Informática</button>
+        <button class="filter-chip" onclick="filtrar(this,'Lab. Ciências')">🔬 Ciências</button>
+        <button class="filter-chip" onclick="filtrar(this,'Sala Maker')">🛠️ Sala Maker</button>
+        <button class="filter-chip" onclick="filtrar(this,'Piscina')">🏊 Piscina</button>
+        <button class="filter-chip" onclick="filtrar(this,'Auditório')">🎭 Auditório</button>
+      </div>
+      <div id="lista-agendamentos">
+        <div class="agenda-empty"><div class="empty-icon">🔄</div><p>Conectando…</p></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal Temas -->
-  <div id="theme-modal">
-    <div class="modal-backdrop" onclick="closeThemeModal()"></div>
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">Escolha um Tema</div>
-      <div class="theme-options">
-        <div class="theme-opt" id="opt-claro" onclick="setTheme('claro')">
-          <div class="check-mark">✓</div>
-          <div class="theme-opt-preview" style="background:linear-gradient(135deg,#f0f4ff,#ffffff)"></div>
-          <div class="theme-opt-label">Claro</div>
-          <div class="theme-opt-sub">Dia</div>
-        </div>
-        <div class="theme-opt" id="opt-escuro" onclick="setTheme('escuro')">
-          <div class="check-mark">✓</div>
-          <div class="theme-opt-preview" style="background:linear-gradient(135deg,#0d0d0d,#181818)"></div>
-          <div class="theme-opt-label">Escuro</div>
-          <div class="theme-opt-sub">Noite</div>
-        </div>
-        <div class="theme-opt" id="opt-turquesa" onclick="setTheme('turquesa')">
-          <div class="check-mark">✓</div>
-          <div class="theme-opt-preview" style="background:linear-gradient(135deg,#ffffff,#f9f9f9)"></div>
-          <div class="theme-opt-label">Turquesa</div>
-          <div class="theme-opt-sub">Neutro</div>
-        </div>
-        <div class="theme-opt" id="opt-rosa" onclick="setTheme('rosa')">
-          <div class="check-mark">✓</div>
-          <div class="theme-opt-preview" style="background:linear-gradient(135deg,#fff0f6,#ffd6e8)"></div>
-          <div class="theme-opt-label">Rosa</div>
-          <div class="theme-opt-sub">Feminino</div>
-        </div>
+
+<!-- Modal Temas -->
+<div id="theme-modal">
+  <div class="modal-backdrop" onclick="closeThemeModal()"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Escolha o Tema</div>
+    <div class="theme-options">
+
+      <div class="theme-opt sel" id="opt-azul" onclick="setTheme('azul')" style="background:#0f2040">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"></div>
+        <div class="theme-opt-label" style="color:#e8f0f8">🔵 Azul</div>
+        <div class="theme-opt-sub"   style="color:#6b93c4">Padrão escuro azul</div>
       </div>
-    </div>
-  </div>
 
-  <!-- Modal Conflito -->
-  <div id="conflito-modal">
-    <div class="conflito-card">
-      <div class="conflito-icone" id="conflito-icone">🚫</div>
-      <div class="conflito-titulo" id="conflito-titulo">Conflito detectado!</div>
-      <div class="conflito-info" id="conflito-info"></div>
-      <div class="conflito-dica" id="conflito-dica"></div>
-      <button class="conflito-btn" onclick="fecharConflito()">Entendi</button>
-    </div>
-  </div>
-
-  <!-- Modal Aviso de Período -->
-  <div id="aviso-periodo-modal">
-    <div class="aviso-card">
-      <div class="aviso-icone">⚠️</div>
-      <div class="aviso-titulo">Já existe agendamento neste período</div>
-      <div class="aviso-info" id="aviso-periodo-info"></div>
-      <div class="aviso-buttons">
-        <button class="aviso-btn" onclick="fecharAvisoPeriodo()">Cancelar</button>
-        <button class="aviso-btn confirm" onclick="confirmarAvisoPeriodo()">Continuar mesmo assim</button>
+      <div class="theme-opt" id="opt-claro" onclick="setTheme('claro')" style="background:#f0f4ff">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)"></div>
+        <div class="theme-opt-label" style="color:#1a2540">☀️ Claro</div>
+        <div class="theme-opt-sub"   style="color:#5a7aaa">Fundo branco e azul</div>
       </div>
+
+      <div class="theme-opt" id="opt-turquesa" onclick="setTheme('turquesa')" style="background:#e8fafd">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#06b6d4,#0891b2)"></div>
+        <div class="theme-opt-label" style="color:#0c3a45">🩵 Turquesa</div>
+        <div class="theme-opt-sub"   style="color:#3a8fa3">Azul turquesa claro</div>
+      </div>
+
+      <div class="theme-opt" id="opt-escuro" onclick="setTheme('escuro')" style="background:#181818">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)"></div>
+        <div class="theme-opt-label" style="color:#f0f0f0">🌙 Escuro</div>
+        <div class="theme-opt-sub"   style="color:#888">Preto com roxo</div>
+      </div>
+
+      <div class="theme-opt" id="opt-rosa" onclick="setTheme('rosa')" style="background:#fff0f6;grid-column:span 2">
+        <div class="check-mark">✓</div>
+        <div class="theme-opt-preview" style="background:linear-gradient(135deg,#ec4899,#db2777)"></div>
+        <div class="theme-opt-label" style="color:#4a1230">🌸 Rosa</div>
+        <div class="theme-opt-sub"   style="color:#be6891">Fundo rosa suave</div>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <!-- Toast -->
-  <div id="toast"></div>
+<!-- Modal Conflito de Horário -->
+<div id="conflito-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.6)" onclick="fecharConflito()"></div>
+  <div style="position:relative;z-index:1;background:var(--bg2);border:2px solid var(--danger);border-radius:20px;padding:28px 22px;width:100%;max-width:360px;text-align:center;animation:fadeIn .2s ease">
+    <div style="font-size:48px;margin-bottom:12px" id="conflito-icone">🚫</div>
+    <div id="conflito-titulo" style="font-size:17px;font-weight:700;color:var(--danger);margin-bottom:10px">Local já reservado!</div>
+    <div id="conflito-info" style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:22px;background:var(--bg3);border-radius:12px;padding:14px"></div>
+    <div id="conflito-dica" style="font-size:13px;color:var(--muted);margin-bottom:20px">Escolha outro horário ou outro local para continuar.</div>
+    <button onclick="fecharConflito()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer">Entendido</button>
+  </div>
+</div>
 
-  <!-- Tela de bloqueio -->
-  <div id="bloqueio-tela" class="bloqueio-overlay"></div>
+<!-- Modal Aviso de Período -->
+<div id="aviso-periodo-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.6)"></div>
+  <div style="position:relative;z-index:1;background:var(--bg2);border:2px solid #f59e0b;border-radius:20px;padding:28px 22px;width:100%;max-width:360px;text-align:center;animation:fadeIn .2s ease">
+    <div style="font-size:48px;margin-bottom:12px">⚠️</div>
+    <div style="font-size:17px;font-weight:700;color:#f59e0b;margin-bottom:10px">Atenção ao período!</div>
+    <div id="aviso-periodo-info" style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:14px;background:var(--bg3);border-radius:12px;padding:14px"></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">Verifique se o(a) professor(a) acima já concluiu sua programação antes de continuar.</div>
+    <div style="display:flex;gap:10px">
+      <button onclick="fecharAvisoPeriodo()" style="flex:1;padding:13px;background:var(--bg3);color:var(--text);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+      <button onclick="confirmarAvisoPeriodo()" style="flex:1;padding:13px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer">Agendar mesmo assim</button>
+    </div>
+  </div>
+</div>
 
-  <!-- Firebase Config -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBKVvPvB_xF-3VvMfO5Yd6Qy7Z8W9X0A1B",
-      authDomain: "agendamentos-escolar.firebaseapp.com",
-      projectId: "agendamentos-escolar",
-      storageBucket: "agendamentos-escolar.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcdef1234567890"
-    };
+<div id="toast"></div>
+
+<script>
+  // ════════════════════════════════════════════════════════════════════════
+  // CONFIGURAÇÃO FIREBASE — substitua com suas credenciais
+  // ════════════════════════════════════════════════════════════════════════
+  var firebaseConfig = {
+    apiKey:            "AIzaSyDPV_P3mgANJJB-DaDpRlfwuoyjBDmAb6w",
+    authDomain:        "agendamento-4c83a.firebaseapp.com",
+    projectId:         "agendamento-4c83a",
+    storageBucket:     "agendamento-4c83a.firebasestorage.app",
+    messagingSenderId: "122001604104",
+    appId:             "1:122001604104:web:50f6aa7a4faa6ca3429bbd"
+  };
+  // ════════════════════════════════════════════════════════════════════════
+
+  // Inicializa Firebase com verificação
+  if (typeof firebase === 'undefined') {
+    document.getElementById('lista-agendamentos') && (document.getElementById('lista-agendamentos').innerHTML =
+      '<div class="agenda-empty"><div class="empty-icon">⚠️</div><p>Sem conexão com o servidor.<br>Verifique sua internet e recarregue a página.</p></div>');
+    throw new Error('Firebase não carregou. Verifique a conexão com a internet.');
+  }
+  if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
+  }
+  var db = firebase.firestore();
 
-  <script>
-    // ── ESTADO GLOBAL ────────────────────────────────────────────────────────
-    var ambienteSelecionado = 'Biblioteca';
-    var filtroAtivo         = '';
-    var todosItens          = [];
-    var rtStarted           = false;
-    var deferredPrompt      = null;
+  // ── Estado ──────────────────────────────────────────────────────────────
+  var ambienteSelecionado = 'Biblioteca';
+  var filtroAtivo         = '';
+  var todosItens          = [];
+  var rtStarted           = false;
+  var deferredPrompt      = null;
 
-    // Relógios digitais
-    var rdInicioH = 10, rdInicioM = 0;
-    var rdFimH = 12, rdFimM = 0;
+  // ── Temas ────────────────────────────────────────────────────────────────
+  var TEMAS = {
+    azul:     { attr:'',         emoji:'🔵', label:'Azul'     },
+    claro:    { attr:'claro',    emoji:'☀️',  label:'Claro'    },
+    turquesa: { attr:'turquesa', emoji:'🩵',  label:'Turquesa' },
+    escuro:   { attr:'escuro',   emoji:'🌙',  label:'Escuro'   },
+    rosa:     { attr:'rosa',     emoji:'🌸',  label:'Rosa'     }
+  };
 
-    // ── Temas ────────────────────────────────────────────────────────────────
-    function openThemeModal()  { document.getElementById('theme-modal').classList.add('open'); }
-    function closeThemeModal() { document.getElementById('theme-modal').classList.remove('open'); }
+  function openThemeModal()  { document.getElementById('theme-modal').classList.add('open'); }
+  function closeThemeModal() { document.getElementById('theme-modal').classList.remove('open'); }
 
-    function _applyDotActive(theme) {
-      document.querySelectorAll('.tdot').forEach(function(d) { d.classList.remove('active'); });
-      var dot = document.getElementById('tdot-' + theme);
-      if (dot) dot.classList.add('active');
+  function _applyDotActive(theme) {
+    document.querySelectorAll('.tdot').forEach(function(d) { d.classList.remove('active'); });
+    var dot = document.getElementById('tdot-' + theme);
+    if (dot) dot.classList.add('active');
+  }
+
+  function setTheme(theme) {
+    var info = TEMAS[theme] || TEMAS.azul;
+    document.documentElement.setAttribute('data-theme', info.attr);
+    document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
+    var el = document.getElementById('opt-' + theme);
+    if (el) el.classList.add('sel');
+    localStorage.setItem('tema', theme);
+    _applyDotActive(theme);
+    closeThemeModal();
+  }
+
+  function setThemeDirect(theme) {
+    var info = TEMAS[theme] || TEMAS.azul;
+    document.documentElement.setAttribute('data-theme', info.attr);
+    document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
+    var el = document.getElementById('opt-' + theme);
+    if (el) el.classList.add('sel');
+    localStorage.setItem('tema', theme);
+    _applyDotActive(theme);
+  }
+
+  // Restaurar tema salvo
+  (function () {
+    var t    = localStorage.getItem('tema') || 'azul';
+    var info = TEMAS[t] || TEMAS.azul;
+    document.documentElement.setAttribute('data-theme', info.attr);
+    document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
+    var el = document.getElementById('opt-' + t);
+    if (el) el.classList.add('sel');
+    _applyDotActive(t);
+  })();
+
+  // ── Navegação ────────────────────────────────────────────────────────────
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('screen-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'lista') iniciarTempoReal();
+  }
+
+  // ── Ambiente ─────────────────────────────────────────────────────────────
+  function selectAmbiente(el) {
+    document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    ambienteSelecionado = el.dataset.value;
+    document.getElementById('campo-outros').style.display =
+      ambienteSelecionado === 'Outros' ? 'block' : 'none';
+  }
+
+  // ── Filtros ──────────────────────────────────────────────────────────────
+  function filtrar(el, value) {
+    filtroAtivo = value;
+    document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+    el.classList.add('active');
+    renderLista();
+  }
+
+  // ── Toast ────────────────────────────────────────────────────────────────
+  function showToast(msg, tipo) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (tipo ? ' ' + tipo : '');
+    setTimeout(function() { el.className = ''; }, 3000);
+  }
+
+  // ── Render Lista ─────────────────────────────────────────────────────────
+  function renderLista() {
+    var container = document.getElementById('lista-agendamentos');
+    var list = filtroAtivo
+      ? todosItens.filter(function(i) { return i.ambiente === filtroAtivo; })
+      : todosItens;
+
+    if (!list.length) {
+      container.innerHTML = '<div class="agenda-empty"><div class="empty-icon">📭</div><p>Nenhuma reserva encontrada.</p></div>';
+      return;
     }
 
-    function setTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
-      var el = document.getElementById('opt-' + theme);
-      if (el) el.classList.add('sel');
-      localStorage.setItem('tema', theme);
-      _applyDotActive(theme);
-      closeThemeModal();
-    }
+    var ic = { 'Biblioteca':'📚','Lab. Informática':'💻','Sala Maker':'🛠️','Piscina':'🏊' };
+    container.innerHTML = list.map(function(item) {
+      var icon = ic[item.ambiente] || '📍';
+      var df = item.data
+        ? new Date(item.data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' })
+        : '—';
+      return '<div class="agenda-item">' +
+        '<div class="agenda-item-header">' +
+          '<div class="agenda-item-title">' + icon + ' ' + item.ambiente + '</div>' +
+          '<button class="btn-delete" onclick="excluir(\'' + item.id + '\')">🗑</button>' +
+        '</div>' +
+        '<div class="agenda-item-meta">' +
+          '<span>📅 ' + df + '</span>' +
+          '<span>⏰ ' + (item.horario || '—') + '</span>' +
+          (item.turma ? '<span>👥 ' + item.turma + '</span>' : '') +
+        '</div>' +
+        '<div class="agenda-item-prof">👤 ' + (item.professor || '—') + '</div>' +
+        (item.descricao ? '<div class="agenda-item-desc">' + item.descricao + '</div>' : '') +
+      '</div>';
+    }).join('');
+  }
 
-    function setThemeDirect(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
-      var el = document.getElementById('opt-' + theme);
-      if (el) el.classList.add('sel');
-      localStorage.setItem('tema', theme);
-      _applyDotActive(theme);
-    }
-
-    // Restaurar tema salvo
-    (function () {
-      var t = localStorage.getItem('tema') || 'claro';
-      document.documentElement.setAttribute('data-theme', t);
-      document.querySelectorAll('.theme-opt').forEach(function(o) { o.classList.remove('sel'); });
-      var el = document.getElementById('opt-' + t);
-      if (el) el.classList.add('sel');
-      _applyDotActive(t);
-    })();
-
-    // ── Navegação ────────────────────────────────────────────────────────────
-    function showScreen(name) {
-      document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
-      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-      document.getElementById('screen-' + name).classList.add('active');
-      document.getElementById('tab-' + name).classList.add('active');
-      if (name === 'lista') iniciarTempoReal();
-    }
-
-    // ── Ambiente ─────────────────────────────────────────────────────────────
-    function selectAmbiente(el) {
-      document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
-      el.classList.add('selected');
-      ambienteSelecionado = el.dataset.value;
-      document.getElementById('campo-outros').style.display =
-        ambienteSelecionado === 'Outros' ? 'block' : 'none';
-    }
-
-    // ── Filtros ──────────────────────────────────────────────────────────────
-    function filtrar(el, value) {
-      filtroAtivo = value;
-      document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
-      el.classList.add('active');
-      renderLista();
-    }
-
-    // ── Toast ────────────────────────────────────────────────────────────────
-    function showToast(msg, tipo) {
-      var el = document.getElementById('toast');
-      el.textContent = msg;
-      el.className = 'show' + (tipo ? ' ' + tipo : '');
-      setTimeout(function() { el.className = ''; }, 3000);
-    }
-
-    // ── Render Lista ─────────────────────────────────────────────────────────
-    function renderLista() {
-      var container = document.getElementById('lista-agendamentos');
-      var list = filtroAtivo
-        ? todosItens.filter(function(i) { return i.ambiente === filtroAtivo; })
-        : todosItens;
-
-      if (!list.length) {
-        container.innerHTML = '<div class="agenda-empty"><div class="empty-icon">📭</div><p>Nenhuma reserva encontrada.</p></div>';
-        return;
-      }
-
-      var ic = { 'Biblioteca':'📚','Lab. Informática':'💻','Lab. Ciências':'🔬','Sala Maker':'🛠️','Piscina':'🏊','Auditório':'🎭' };
-      container.innerHTML = list.map(function(item) {
-        var icon = ic[item.ambiente] || '📍';
-        var df = item.data
-          ? new Date(item.data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' })
-          : '—';
-        var intervalo = (item.horarioInicio || item.horario || '—') + ' — ' + (item.horarioFim || item.horario || '—');
-        return '<div class="agenda-item">' +
-          '<div class="agenda-item-header">' +
-            '<div class="agenda-item-title">' + icon + ' ' + item.ambiente + '</div>' +
-            '<button class="btn-delete" onclick="excluir(\'' + item.id + '\')">🗑</button>' +
-          '</div>' +
-          '<div class="agenda-item-meta">' +
-            '<span>📅 ' + df + '</span>' +
-          '</div>' +
-          '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px">⏰ ' + intervalo + '</div>' +
-          '<div class="agenda-item-prof">👤 ' + (item.professor || '—') + '</div>' +
-          (item.turma ? '<div style="font-size:12px;color:var(--muted)">👥 ' + item.turma + '</div>' : '') +
-          (item.descricao ? '<div class="agenda-item-desc">' + item.descricao + '</div>' : '') +
-        '</div>';
-      }).join('');
-    }
-
-    // ── Tempo Real ───────────────────────────────────────────────────────────
-    function iniciarTempoReal() {
-      if (rtStarted) return;
-      rtStarted = true;
-      db.collection('agendamentos')
-        .orderBy('criado_em', 'desc')
-        .onSnapshot(function(snap) {
-          todosItens = [];
-          snap.forEach(function(d) {
-            todosItens.push(Object.assign({ id: d.id }, d.data()));
-          });
-          renderLista();
-        }, function(err) {
-          document.getElementById('lista-agendamentos').innerHTML =
-            '<div class="agenda-empty"><div class="empty-icon">⚠️</div><p>Erro: ' + err.message + '</p></div>';
+  // ── Tempo Real (onSnapshot — atualiza para todos simultaneamente) ─────────
+  function iniciarTempoReal() {
+    if (rtStarted) return;
+    rtStarted = true;
+    db.collection('agendamentos')
+      .orderBy('criado_em', 'desc')
+      .onSnapshot(function(snap) {
+        todosItens = [];
+        snap.forEach(function(d) {
+          todosItens.push(Object.assign({ id: d.id }, d.data()));
         });
+        renderLista();
+      }, function(err) {
+        document.getElementById('lista-agendamentos').innerHTML =
+          '<div class="agenda-empty"><div class="empty-icon">⚠️</div><p>Erro: ' + err.message + '</p></div>';
+      });
+  }
+
+  // ── Relógio Digital ──────────────────────────────────────────────────────
+  var _agora = new Date();
+  var rdH = _agora.getHours(), rdM = Math.round(_agora.getMinutes() / 5) * 5 % 60;
+
+  function rdPad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function rdAtualizar() {
+    document.getElementById('rd-hh').textContent = rdPad(rdH);
+    document.getElementById('rd-mm').textContent = rdPad(rdM);
+    document.getElementById('horario').value = rdPad(rdH) + ':' + rdPad(rdM);
+  }
+
+  function rdStep(tipo, delta) {
+    if (tipo === 'h') {
+      rdH = (rdH + delta + 24) % 24;
+    } else {
+      rdM = (rdM + delta + 60) % 60;
     }
+    rdAtualizar();
+  }
 
-    // ── Relógios Digitais Duplos ──────────────────────────────────────────────
-    function rdPad(n) { return n < 10 ? '0' + n : '' + n; }
+  function rdAgora() {
+    var now = new Date();
+    rdH = now.getHours();
+    rdM = Math.round(now.getMinutes() / 5) * 5 % 60;
+    rdAtualizar();
+  }
 
-    function atualizarRelógios() {
-      document.getElementById('rd-inicio-hh').textContent = rdPad(rdInicioH);
-      document.getElementById('rd-inicio-mm').textContent = rdPad(rdInicioM);
-      document.getElementById('rd-fim-hh').textContent = rdPad(rdFimH);
-      document.getElementById('rd-fim-mm').textContent = rdPad(rdFimM);
-      
-      document.getElementById('horarioInicio').value = rdPad(rdInicioH) + ':' + rdPad(rdInicioM);
-      document.getElementById('horarioFim').value = rdPad(rdFimH) + ':' + rdPad(rdFimM);
-      
-      atualizarDuracao();
-    }
+  // ── Modal de Conflito ────────────────────────────────────────────────────
+  function mostrarConflitoLocal(ambiente, data, horario, professor, livreAs) {
+    var df = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+    document.getElementById('conflito-icone').textContent = '🚫';
+    document.getElementById('conflito-titulo').textContent = 'Local indisponível!';
+    document.getElementById('conflito-info').innerHTML =
+      '<strong>' + ambiente + '</strong> foi reservado às <strong>' + horario + '</strong><br>' +
+      'pelo(a) prof(a) <strong>' + professor + '</strong><br><br>' +
+      '📅 ' + df + '<br><br>' +
+      '🕐 Próximo horário disponível: <strong>' + livreAs + '</strong>';
+    document.getElementById('conflito-dica').textContent = 'É necessário 1h de intervalo entre agendamentos no mesmo local.';
+    document.getElementById('conflito-modal').classList.add('open');
+  }
 
-    function atualizarDuracao() {
-      var inicioMin = rdInicioH * 60 + rdInicioM;
-      var fimMin = rdFimH * 60 + rdFimM;
-      var duracao = fimMin - inicioMin;
-      
-      if (duracao < 0) duracao += 24 * 60;
-      
-      var horas = Math.floor(duracao / 60);
-      var minutos = duracao % 60;
-      
-      var duracaoStr = '';
-      if (horas > 0) duracaoStr += horas + 'h ';
-      duracaoStr += minutos + 'm';
-      
-      document.getElementById('duracao-display').textContent = duracaoStr;
-    }
+  function mostrarConflitoProfessor(professor, data, horario, ambiente) {
+    var df = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+    document.getElementById('conflito-icone').textContent = '👤';
+    document.getElementById('conflito-titulo').textContent = 'Professor já agendado!';
+    document.getElementById('conflito-info').innerHTML =
+      'O(a) prof(a) <strong>' + professor + '</strong> já possui<br>' +
+      'um agendamento neste horário:<br><br>' +
+      '📅 ' + df + ' &nbsp;⏰ ' + horario + '<br>' +
+      'em <strong>' + ambiente + '</strong>';
+    document.getElementById('conflito-dica').textContent = 'Este professor já está ocupado neste horário. Escolha outro horário.';
+    document.getElementById('conflito-modal').classList.add('open');
+  }
 
-    function rdStepInicio(delta) {
-      rdInicioM = (rdInicioM + delta + 60) % 60;
-      if (rdInicioM + delta < 0 || rdInicioM + delta >= 60) {
-        rdInicioH = (rdInicioH + Math.floor((rdInicioM + delta) / 60) + 24) % 24;
-      }
-      atualizarRelógios();
-    }
+  function fecharConflito() {
+    document.getElementById('conflito-modal').classList.remove('open');
+  }
 
-    function rdStepFim(delta) {
-      rdFimM = (rdFimM + delta + 60) % 60;
-      if (rdFimM + delta < 0 || rdFimM + delta >= 60) {
-        rdFimH = (rdFimH + Math.floor((rdFimM + delta) / 60) + 24) % 24;
-      }
-      atualizarRelógios();
-    }
+  // ── Aviso de Período ─────────────────────────────────────────────────────
+  var _pendingAgendamento = null; // dados prontos para salvar após aviso de período
 
-    // ── Modal de Conflito ────────────────────────────────────────────────────
-    function mostrarConflitoSobreposicao(ambiente, data, horarioExistente, professor) {
-      var df = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-      document.getElementById('conflito-icone').textContent = '🚫';
-      document.getElementById('conflito-titulo').textContent = 'Horário indisponível!';
-      document.getElementById('conflito-info').innerHTML =
-        '<strong>' + ambiente + '</strong> já está reservado neste horário:<br><br>' +
-        '📅 ' + df + '<br>' +
-        '⏰ ' + horarioExistente + '<br>' +
-        'prof(a): <strong>' + professor + '</strong>';
-      document.getElementById('conflito-dica').textContent = 'Escolha um horário que não se sobreponha com agendamentos existentes.';
-      document.getElementById('conflito-modal').classList.add('open');
-    }
+  function getPeriodo(horario) {
+    var h = parseInt((horario || '').split(':')[0], 10);
+    if (h >= 7  && h < 12) return 'manhã';
+    if (h >= 12 && h < 18) return 'tarde';
+    return 'outro';
+  }
 
-    function mostrarConflitoProfessor(professor, data, horario, ambiente) {
-      var df = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-      document.getElementById('conflito-icone').textContent = '👤';
-      document.getElementById('conflito-titulo').textContent = 'Professor já agendado!';
-      document.getElementById('conflito-info').innerHTML =
-        'O(a) prof(a) <strong>' + professor + '</strong> já possui<br>' +
-        'um agendamento neste horário:<br><br>' +
-        '📅 ' + df + ' &nbsp;⏰ ' + horario + '<br>' +
-        'em <strong>' + ambiente + '</strong>';
-      document.getElementById('conflito-dica').textContent = 'Este professor já está ocupado neste horário. Escolha outro horário.';
-      document.getElementById('conflito-modal').classList.add('open');
-    }
+  function fecharAvisoPeriodo() {
+    document.getElementById('aviso-periodo-modal').style.display = 'none';
+    _pendingAgendamento = null;
+    var btn = document.getElementById('btn-salvar');
+    btn.disabled = false;
+    btn.innerHTML = '<span>Confirmar Reserva</span>';
+  }
 
-    function fecharConflito() {
-      document.getElementById('conflito-modal').classList.remove('open');
-    }
-
-    // ── Aviso de Período ─────────────────────────────────────────────────────
-    var _pendingAgendamento = null;
-
-    function getPeriodo(horario) {
-      var h = parseInt((horario || '').split(':')[0], 10);
-      if (h >= 7  && h < 12) return 'manhã';
-      if (h >= 12 && h < 18) return 'tarde';
-      return 'outro';
-    }
-
-    function fecharAvisoPeriodo() {
-      document.getElementById('aviso-periodo-modal').style.display = 'none';
+  function confirmarAvisoPeriodo() {
+    document.getElementById('aviso-periodo-modal').style.display = 'none';
+    if (_pendingAgendamento) {
+      _executarSalvar(_pendingAgendamento);
       _pendingAgendamento = null;
-      var btn = document.getElementById('btn-salvar');
-      btn.disabled = false;
-      btn.innerHTML = '<span>Confirmar Reserva</span>';
+    }
+  }
+
+  function mostrarAvisoPeriodo(periodo, professorOcupado, horarioOcupado, ambienteOcupado, dadosPendentes) {
+    var periodoLabel = periodo === 'manhã' ? '☀️ Manhã (07h–11h50)' : '🌤 Tarde (12h–17h50)';
+    document.getElementById('aviso-periodo-info').innerHTML =
+      'Já existe agendamento no período da <strong>' + periodo + '</strong>:<br><br>' +
+      periodoLabel + '<br>' +
+      '⏰ ' + horarioOcupado + ' — <strong>' + professorOcupado + '</strong><br>' +
+      'em <strong>' + ambienteOcupado + '</strong>';
+    _pendingAgendamento = dadosPendentes;
+    document.getElementById('aviso-periodo-modal').style.display = 'flex';
+  }
+
+  // ── Salvar ───────────────────────────────────────────────────────────────
+  function salvarAgendamento() {
+    var data      = document.getElementById('data').value;
+    var horario   = document.getElementById('horario').value;
+    var professor = document.getElementById('professor').value.trim();
+
+    if (!data || !horario || !professor) {
+      showToast('Preencha data, horário e nome do professor.', 'error');
+      return;
     }
 
-    function confirmarAvisoPeriodo() {
-      document.getElementById('aviso-periodo-modal').style.display = 'none';
-      if (_pendingAgendamento) {
-        _executarSalvar(_pendingAgendamento);
-        _pendingAgendamento = null;
-      }
-    }
+    var ambiente = ambienteSelecionado === 'Outros'
+      ? (document.getElementById('detalheAmbiente').value.trim() || 'Outros')
+      : ambienteSelecionado;
 
-    function mostrarAvisoPeriodo(periodo, professorOcupado, horarioOcupado, ambienteOcupado, dadosPendentes) {
-      var periodoLabel = periodo === 'manhã' ? '☀️ Manhã (07h–11h50)' : '🌤 Tarde (12h–17h50)';
-      document.getElementById('aviso-periodo-info').innerHTML =
-        'Já existe agendamento no período da <strong>' + periodo + '</strong>:<br><br>' +
-        periodoLabel + '<br>' +
-        '⏰ ' + horarioOcupado + ' — <strong>' + professorOcupado + '</strong><br>' +
-        'em <strong>' + ambienteOcupado + '</strong>';
-      _pendingAgendamento = dadosPendentes;
-      document.getElementById('aviso-periodo-modal').style.display = 'flex';
-    }
+    var btn = document.getElementById('btn-salvar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Verificando…';
 
-    // ── Verificação de Sobreposição ──────────────────────────────────────────
-    function temSobreposicao(inicio1, fim1, inicio2, fim2) {
-      return inicio1 < fim2 && fim1 > inicio2;
-    }
+    // Busca TODOS os agendamentos do mesmo dia de uma vez e compara no cliente
+    // Isso evita falhas por diferença de maiúsculas/espaços em queries do Firestore
+    db.collection('agendamentos')
+      .where('data', '==', data)
+      .get()
+      .then(function(snap) {
+        var horarioNorm = horario.trim();
+        var ambienteNorm = ambiente.trim().toLowerCase();
+        var professorNorm = professor.trim().toLowerCase();
 
-    function timeToMinutes(timeStr) {
-      var p = (timeStr || '').split(':');
-      return parseInt(p[0], 10) * 60 + parseInt(p[1] || 0, 10);
-    }
+        // Converte "HH:MM" em minutos para facilitar comparações
+        function toMin(h) {
+          var p = (h || '').split(':');
+          return parseInt(p[0], 10) * 60 + parseInt(p[1] || 0, 10);
+        }
+        var novoMin = toMin(horarioNorm);
 
-    // ── Salvar ───────────────────────────────────────────────────────────────
-    function salvarAgendamento() {
-      var data           = document.getElementById('data').value;
-      var horarioInicio  = document.getElementById('horarioInicio').value;
-      var horarioFim     = document.getElementById('horarioFim').value;
-      var professor      = document.getElementById('professor').value.trim();
+        var conflitoLocal = null;
+        var conflitoProf  = null;
 
-      if (!data || !horarioInicio || !horarioFim || !professor) {
-        showToast('Preencha data, horários e nome do professor.', 'error');
-        return;
-      }
+        snap.forEach(function(d) {
+          var ag = d.data();
+          var agHorario   = (ag.horario  || '').trim();
+          var agAmbiente  = (ag.ambiente || '').trim().toLowerCase();
+          var agProfessor = (ag.professor|| '').trim().toLowerCase();
+          var agMin       = toMin(agHorario);
+          var diff        = Math.abs(novoMin - agMin);
 
-      var ambiente = ambienteSelecionado === 'Outros'
-        ? (document.getElementById('detalheAmbiente').value.trim() || 'Outros')
-        : ambienteSelecionado;
-
-      var btn = document.getElementById('btn-salvar');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Verificando…';
-
-      db.collection('agendamentos')
-        .where('data', '==', data)
-        .get()
-        .then(function(snap) {
-          var horarioInicioNorm = horarioInicio.trim();
-          var horarioFimNorm = horarioFim.trim();
-          var ambienteNorm = ambiente.trim().toLowerCase();
-          var professorNorm = professor.trim().toLowerCase();
-
-          var inicioMin = timeToMinutes(horarioInicioNorm);
-          var fimMin = timeToMinutes(horarioFimNorm);
-
-          var conflitoLocal = null;
-          var conflitoProf  = null;
-
-          snap.forEach(function(d) {
-            var ag = d.data();
-            var agInicioStr = (ag.horarioInicio || ag.horario || '').trim();
-            var agFimStr    = (ag.horarioFim || ag.horario || '').trim();
-            var agAmbiente  = (ag.ambiente || '').trim().toLowerCase();
-            var agProfessor = (ag.professor || '').trim().toLowerCase();
-
-            var agInicioMin = timeToMinutes(agInicioStr);
-            var agFimMin    = timeToMinutes(agFimStr);
-
-            if (agAmbiente === ambienteNorm && temSobreposicao(inicioMin, fimMin, agInicioMin, agFimMin) && !conflitoLocal) {
-              conflitoLocal = ag;
-            }
-
-            if (agProfessor === professorNorm && temSobreposicao(inicioMin, fimMin, agInicioMin, agFimMin) && !conflitoProf) {
-              conflitoProf = ag;
-            }
-          });
-
-          if (conflitoLocal) {
-            btn.disabled = false;
-            btn.innerHTML = '<span>Confirmar Reserva</span>';
-            var intervaloExistente = (conflitoLocal.horarioInicio || conflitoLocal.horario || '—') + ' — ' + (conflitoLocal.horarioFim || conflitoLocal.horario || '—');
-            mostrarConflitoSobreposicao(ambiente, data, intervaloExistente, conflitoLocal.professor || '—');
-            return;
+          // conflito de local: mesmo ambiente, dentro de 60 min (intervalo de 1h obrigatório)
+          if (agAmbiente === ambienteNorm && diff < 60 && !conflitoLocal) {
+            conflitoLocal = ag;
           }
-
-          if (conflitoProf) {
-            btn.disabled = false;
-            btn.innerHTML = '<span>Confirmar Reserva</span>';
-            var intervaloProf = (conflitoProf.horarioInicio || conflitoProf.horario || '—') + ' — ' + (conflitoProf.horarioFim || conflitoProf.horario || '—');
-            mostrarConflitoProfessor(professor, data, intervaloProf, conflitoProf.ambiente || '—');
-            return;
+          // conflito de professor: mesmo professor + mesmo horário exato (qualquer local)
+          if (agProfessor === professorNorm && agHorario === horarioNorm && !conflitoProf) {
+            conflitoProf = ag;
           }
+        });
 
-          var periodoNovo = getPeriodo(horarioInicioNorm);
-          var avisoPeriodo = null;
-          if (periodoNovo !== 'outro') {
-            snap.forEach(function(d) {
-              if (avisoPeriodo) return;
-              var ag = d.data();
-              var agProfNorm = (ag.professor || '').trim().toLowerCase();
-              var agAmbNorm  = (ag.ambiente  || '').trim().toLowerCase();
-              var agPeriodo  = getPeriodo((ag.horarioInicio || ag.horario || '').trim());
-              if (agAmbNorm === ambienteNorm && agPeriodo === periodoNovo && agProfNorm !== professorNorm) {
-                avisoPeriodo = ag;
-              }
-            });
-          }
-
-          var dadosPendentes = {
-            ambiente:       ambiente,
-            professor:      professor,
-            turma:          document.getElementById('turma').value.trim(),
-            data:           data,
-            horarioInicio:  horarioInicio,
-            horarioFim:     horarioFim,
-            descricao:      document.getElementById('descricao').value.trim()
-          };
-
-          if (avisoPeriodo) {
-            btn.disabled = false;
-            btn.innerHTML = '<span>Confirmar Reserva</span>';
-            var intervaloAviso = (avisoPeriodo.horarioInicio || avisoPeriodo.horario || '—') + ' — ' + (avisoPeriodo.horarioFim || avisoPeriodo.horario || '—');
-            mostrarAvisoPeriodo(periodoNovo, avisoPeriodo.professor || '—', intervaloAviso, avisoPeriodo.ambiente || '—', dadosPendentes);
-            return;
-          }
-
-          _executarSalvar(dadosPendentes);
-        }).catch(function(e) {
-          showToast('Erro ao verificar disponibilidade: ' + e.message, 'error');
+        if (conflitoLocal) {
           btn.disabled = false;
           btn.innerHTML = '<span>Confirmar Reserva</span>';
-        });
-    }
+          var agMin2   = toMin((conflitoLocal.horario || '').trim());
+          var livreMin = agMin2 + 60;
+          var livreH   = Math.floor(livreMin / 60) % 24;
+          var livreM   = livreMin % 60;
+          var livreStr = (livreH < 10 ? '0' : '') + livreH + ':' + (livreM < 10 ? '0' : '') + livreM;
+          mostrarConflitoLocal(ambiente, data, horario, conflitoLocal.professor || '—', livreStr);
+          return;
+        }
+        if (conflitoProf) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>Confirmar Reserva</span>';
+          mostrarConflitoProfessor(professor, data, horario, conflitoProf.ambiente || '—');
+          return;
+        }
 
-    // ── Executar Salvar ───────────────────────────────────────────────────────
-    function _executarSalvar(d) {
-      var btn = document.getElementById('btn-salvar');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Salvando…';
-      db.collection('agendamentos').add({
-        ambiente:       d.ambiente,
-        professor:      d.professor,
-        turma:          d.turma,
-        data:           d.data,
-        horarioInicio:  d.horarioInicio,
-        horarioFim:     d.horarioFim,
-        descricao:      d.descricao,
-        criado_em:      firebase.firestore.FieldValue.serverTimestamp()
-      }).then(function() {
-        showToast('✅ Reserva confirmada!');
-        ['professor','turma','descricao','detalheAmbiente'].forEach(function(id) {
-          var el = document.getElementById(id); if (el) el.value = '';
-        });
-        rdInicioH = 10; rdInicioM = 0;
-        rdFimH = 12; rdFimM = 0;
-        atualizarRelógios();
-        document.querySelectorAll('.chip').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
-        ambienteSelecionado = 'Biblioteca';
-        document.getElementById('campo-outros').style.display = 'none';
-        document.getElementById('data').valueAsDate = new Date();
+        // Verificar aviso de período: mesmo local + mesmo período (manhã/tarde) + professor diferente
+        // Roda mesmo que o horário exato esteja livre (fora da janela de 1h)
+        var periodoNovo = getPeriodo(horarioNorm);
+        var avisoPeriodo = null;
+        if (periodoNovo !== 'outro') {
+          snap.forEach(function(d) {
+            if (avisoPeriodo) return;
+            var ag = d.data();
+            var agProfNorm = (ag.professor || '').trim().toLowerCase();
+            var agAmbNorm  = (ag.ambiente  || '').trim().toLowerCase();
+            var agPeriodo  = getPeriodo((ag.horario || '').trim());
+            // mesmo local, mesmo período, professor diferente
+            if (agAmbNorm === ambienteNorm && agPeriodo === periodoNovo && agProfNorm !== professorNorm) {
+              avisoPeriodo = ag;
+            }
+          });
+        }
+
+        var dadosPendentes = {
+          ambiente:  ambiente,
+          professor: professor,
+          turma:     document.getElementById('turma').value.trim(),
+          data:      data,
+          horario:   horario,
+          descricao: document.getElementById('descricao').value.trim()
+        };
+
+        if (avisoPeriodo) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>Confirmar Reserva</span>';
+          mostrarAvisoPeriodo(periodoNovo, avisoPeriodo.professor || '—', avisoPeriodo.horario || '—', avisoPeriodo.ambiente || '—', dadosPendentes);
+          return;
+        }
+
+        // Sem conflito e sem aviso — salvar direto
+        _executarSalvar(dadosPendentes);
       }).catch(function(e) {
-        showToast('Erro ao salvar: ' + e.message, 'error');
-      }).finally(function() {
+        showToast('Erro ao verificar disponibilidade: ' + e.message, 'error');
         btn.disabled = false;
         btn.innerHTML = '<span>Confirmar Reserva</span>';
       });
-    }
+  }
 
-    // ── Excluir ──────────────────────────────────────────────────────────────
-    function excluir(id) {
-      if (!confirm('Excluir esta reserva?')) return;
-      db.collection('agendamentos').doc(id).delete()
-        .then(function() { showToast('Reserva excluída.'); })
-        .catch(function() { showToast('Erro ao excluir.', 'error'); });
-    }
-
-    // ── PWA ──────────────────────────────────────────────────────────────────
-    function dismissInstall() { document.getElementById('install-banner').classList.remove('show'); }
-
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault(); deferredPrompt = e;
-      document.getElementById('install-banner').classList.add('show');
+  // ── Executar Salvar (após validações) ───────────────────────────────────
+  function _executarSalvar(d) {
+    var btn = document.getElementById('btn-salvar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Salvando…';
+    db.collection('agendamentos').add({
+      ambiente:  d.ambiente,
+      professor: d.professor,
+      turma:     d.turma,
+      data:      d.data,
+      horario:   d.horario,
+      descricao: d.descricao,
+      criado_em: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function() {
+      showToast('✅ Reserva confirmada!');
+      ['data','professor','turma','descricao','detalheAmbiente'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
+      var _n = new Date(); rdH = _n.getHours(); rdM = Math.round(_n.getMinutes() / 10) * 10 % 60; rdAtualizar();
+      document.querySelectorAll('.chip').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
+      ambienteSelecionado = 'Biblioteca';
+      document.getElementById('campo-outros').style.display = 'none';
+      document.getElementById('data').valueAsDate = new Date();
+    }).catch(function(e) {
+      showToast('Erro ao salvar: ' + e.message, 'error');
+    }).finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Confirmar Reserva</span>';
     });
-    document.getElementById('btn-install-pwa').addEventListener('click', function() {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function() { deferredPrompt = null; dismissInstall(); });
+  }
+
+  // ── Excluir ──────────────────────────────────────────────────────────────
+  function excluir(id) {
+    if (!confirm('Excluir esta reserva?')) return;
+    db.collection('agendamentos').doc(id).delete()
+      .then(function() { showToast('Reserva excluída.'); })
+      .catch(function() { showToast('Erro ao excluir.', 'error'); });
+  }
+
+  // ── PWA ──────────────────────────────────────────────────────────────────
+  function dismissInstall() { document.getElementById('install-banner').classList.remove('show'); }
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault(); deferredPrompt = e;
+    document.getElementById('install-banner').classList.add('show');
+  });
+  document.getElementById('btn-install-pwa').addEventListener('click', function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function() { deferredPrompt = null; dismissInstall(); });
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  document.getElementById('data').valueAsDate = new Date();
+</script>
+
+<script>
+  // Força limpeza de todo cache e SW antigo, depois registra o novo
+  if ('serviceWorker' in navigator) {
+    // Remove todos os service workers antigos
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (var reg of registrations) {
+        reg.unregister();
+      }
     });
-
-    // ── Init ─────────────────────────────────────────────────────────────────
-    document.getElementById('data').valueAsDate = new Date();
-    atualizarRelógios();
-  </script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var reg of registrations) {
-          reg.unregister();
+    // Limpa todos os caches antigos
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (var name of names) {
+          caches.delete(name);
         }
       });
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (var name of names) {
-            caches.delete(name);
-          }
-        });
-      }
-      setTimeout(function() {
-        navigator.serviceWorker.register('./sw.js?v=3').then(function(reg) {
-          reg.update();
-        }).catch(function(){});
-      }, 500);
     }
-  </script>
+    // Registra o novo SW após limpeza
+    setTimeout(function() {
+      navigator.serviceWorker.register('./sw.js?v=3').then(function(reg) {
+        reg.update();
+      }).catch(function(){});
+    }, 500);
+  }
+</script>
 
-  <!-- ALFA STORE FOOTER FIXO -->
-  <div class="alfa-footer">
-    <div class="alfa-footer-text">
-      <span class="alfa-dev-label">Desenvolvido por Alfa Store — Soluções e Tecnologia</span>
-    </div>
-    <a class="alfa-whatsapp" href="https://wa.me/5592994810508" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
-      Suporte — (92) 99481-0508
-    </a>
+<!-- ALFA STORE FOOTER FIXO -->
+<div class="alfa-footer">
+  <div class="alfa-footer-text">
+    <span class="alfa-dev-label">Desenvolvido por Alfa Store — Soluções e Tecnologia</span>
   </div>
+  <a class="alfa-whatsapp" href="https://wa.me/5592994810508" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    Suporte — (92) 99481-0508
+  </a>
+</div>
 
-  <!-- MODAL ADMIN ETAPA 1: Palavra-chave -->
-  <div class="admin-overlay" id="admin-modal-1">
-    <div class="admin-card">
-      <button class="admin-close" onclick="fecharAdmin()">×</button>
-      <div class="admin-shield">🔐</div>
-      <div class="admin-title">Área Restrita</div>
-      <div class="admin-sub">Digite a palavra-chave para continuar</div>
-      <div class="admin-error" id="admin-err-1">Palavra-chave incorreta. Tente novamente.</div>
-      <div class="admin-field">
-        <label>Palavra-chave</label>
-        <input type="password" id="admin-key" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')verificarChave()"/>
-      </div>
-      <button class="admin-btn" onclick="verificarChave()">Continuar →</button>
+
+<!-- MODAL ETAPA 1: Palavra-chave -->
+<div class="admin-overlay" id="admin-modal-1">
+  <div class="admin-card">
+    <button class="admin-close" onclick="fecharAdmin()">×</button>
+    <div class="admin-shield">🔐</div>
+    <div class="admin-title">Área Restrita</div>
+    <div class="admin-sub">Digite a palavra-chave para continuar</div>
+    <div class="admin-error" id="admin-err-1">Palavra-chave incorreta. Tente novamente.</div>
+    <div class="admin-field">
+      <label>Palavra-chave</label>
+      <input type="password" id="admin-key" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')verificarChave()"/>
     </div>
+    <button class="admin-btn" onclick="verificarChave()">Continuar →</button>
   </div>
+</div>
 
-  <!-- MODAL ADMIN ETAPA 2: Painel Admin com Perfil -->
-  <div class="admin-overlay" id="admin-modal-2">
-    <div class="admin-card" style="max-height:88vh;overflow-y:auto;padding-bottom:24px">
-      <button class="admin-close" onclick="fecharAdmin()">×</button>
+<!-- MODAL ETAPA 2: Painel Admin com Perfil -->
+<div class="admin-overlay" id="admin-modal-2">
+  <div class="admin-card" style="max-height:88vh;overflow-y:auto;padding-bottom:24px">
+    <button class="admin-close" onclick="fecharAdmin()">×</button>
 
-      <!-- Perfil do Proprietário -->
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 4px 16px rgba(59,130,246,.35)">👤</div>
-        <div style="font-size:17px;font-weight:700;color:var(--text)">Proprietário</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px">Acesso total ao sistema</div>
-      </div>
-
-      <!-- Nome da Escola -->
-      <div style="background:var(--bg3);border-radius:14px;padding:14px 16px;margin-bottom:14px">
-        <div style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">🏫 Nome da Escola</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="input-nome-escola" type="text" placeholder="Nome da escola…"
-            style="flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none"
-            onkeydown="if(event.key==='Enter')salvarNomeEscola()"/>
-          <button onclick="salvarNomeEscola()"
-            style="padding:9px 14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
-            Salvar
-          </button>
-        </div>
-        <div id="escola-salva-ok" style="display:none;font-size:12px;color:#22c55e;margin-top:6px;text-align:center">✅ Nome atualizado!</div>
-      </div>
-
-      <!-- Divisor -->
-      <div style="height:1px;background:var(--border);margin:4px 0 14px"></div>
-
-      <!-- Toggle Bloqueio -->
-      <div class="admin-toggle-row">
-        <div class="admin-toggle-label">🔒 Bloquear app</div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="toggle-bloqueio" onchange="toggleBloqueio(this.checked)"/>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-
-      <button class="admin-btn" style="margin-top:18px;background:linear-gradient(135deg,#16a34a,#15803d)" onclick="fecharAdmin()">✓ Fechar</button>
+    <!-- Perfil do Proprietário -->
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 4px 16px rgba(59,130,246,.35)">👤</div>
+      <div style="font-size:17px;font-weight:700;color:var(--text)">Proprietário</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Acesso total ao sistema</div>
     </div>
-  </div>
 
-  <script>
-    function abrirAdminEtapa1() {
-      document.getElementById('admin-key').value = '';
-      document.getElementById('admin-err-1').classList.remove('show');
-      document.getElementById('admin-modal-1').classList.add('open');
-      setTimeout(function(){ document.getElementById('admin-key').focus(); }, 100);
-    }
-    function fecharAdmin() {
+    <!-- Nome da Escola -->
+    <div style="background:var(--bg3);border-radius:14px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">🏫 Nome da Escola</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="input-nome-escola" type="text" placeholder="Nome da escola…"
+          style="flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none"
+          onkeydown="if(event.key==='Enter')salvarNomeEscola()"/>
+        <button onclick="salvarNomeEscola()"
+          style="padding:9px 14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
+          Salvar
+        </button>
+      </div>
+      <div id="escola-salva-ok" style="display:none;font-size:12px;color:#22c55e;margin-top:6px;text-align:center">✅ Nome atualizado!</div>
+    </div>
+
+    <!-- Divisor -->
+    <div style="height:1px;background:var(--border);margin:4px 0 14px"></div>
+
+    <!-- Toggle Bloqueio -->
+    <div class="admin-toggle-row">
+      <div class="admin-toggle-label">🔒 Bloquear app</div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-bloqueio" onchange="toggleBloqueio(this.checked)"/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <button class="admin-btn" style="margin-top:18px;background:linear-gradient(135deg,#16a34a,#15803d)" onclick="fecharAdmin()">✓ Fechar</button>
+  </div>
+</div>
+
+<script>
+  function abrirAdminEtapa1() {
+    document.getElementById('admin-key').value = '';
+    document.getElementById('admin-err-1').classList.remove('show');
+    document.getElementById('admin-modal-1').classList.add('open');
+    setTimeout(function(){ document.getElementById('admin-key').focus(); }, 100);
+  }
+  function fecharAdmin() {
+    document.getElementById('admin-modal-1').classList.remove('open');
+    document.getElementById('admin-modal-2').classList.remove('open');
+  }
+  async function verificarChave() {
+    var val = document.getElementById('admin-key').value.trim();
+    const encoder = new TextEncoder();
+    const data = encoder.encode(val.toLowerCase());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const HASH_CORRETO = 'd3ecc5b7fe38ffd3397473362f2c42321fb82deb23083ed13cf6f20320ab6c92';
+    if (hashHex === HASH_CORRETO) {
       document.getElementById('admin-modal-1').classList.remove('open');
-      document.getElementById('admin-modal-2').classList.remove('open');
+      var nomeAtual = localStorage.getItem('nomeEscola') || '';
+      document.getElementById('input-nome-escola').value = nomeAtual;
+      document.getElementById('escola-salva-ok').style.display = 'none';
+      document.getElementById('toggle-bloqueio').checked = localStorage.getItem('bloqueioAtivo') === '1';
+      document.getElementById('admin-modal-2').classList.add('open');
+    } else {
+      var err = document.getElementById('admin-err-1');
+      err.classList.add('show');
+      document.getElementById('admin-key').value = '';
+      document.getElementById('admin-key').focus();
+      setTimeout(function(){ err.classList.remove('show'); }, 2500);
     }
-    async function verificarChave() {
-      var val = document.getElementById('admin-key').value.trim();
-      const encoder = new TextEncoder();
-      const data = encoder.encode(val.toLowerCase());
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      const HASH_CORRETO = 'd3ecc5b7fe38ffd3397473362f2c42321fb82deb23083ed13cf6f20320ab6c92';
-      if (hashHex === HASH_CORRETO) {
-        document.getElementById('admin-modal-1').classList.remove('open');
-        var nomeAtual = localStorage.getItem('nomeEscola') || '';
-        document.getElementById('input-nome-escola').value = nomeAtual;
-        document.getElementById('escola-salva-ok').style.display = 'none';
-        document.getElementById('toggle-bloqueio').checked = localStorage.getItem('bloqueioAtivo') === '1';
-        document.getElementById('admin-modal-2').classList.add('open');
-      } else {
-        var err = document.getElementById('admin-err-1');
-        err.classList.add('show');
-        document.getElementById('admin-key').value = '';
-        document.getElementById('admin-key').focus();
-        setTimeout(function(){ err.classList.remove('show'); }, 2500);
-      }
-    }
+  }
 
-    function salvarNomeEscola() {
-      var nome = document.getElementById('input-nome-escola').value.trim();
-      if (!nome) return;
-      localStorage.setItem('nomeEscola', nome);
+  function salvarNomeEscola() {
+    var nome = document.getElementById('input-nome-escola').value.trim();
+    if (!nome) return;
+    localStorage.setItem('nomeEscola', nome);
+    // atualiza o h1 na tela
+    var h1 = document.querySelector('.logo-text h1');
+    if (h1) h1.textContent = nome;
+    var ok = document.getElementById('escola-salva-ok');
+    ok.style.display = 'block';
+    setTimeout(function(){ ok.style.display = 'none'; }, 2500);
+  }
+
+  // ── Carrega nome da escola ao iniciar ────────────────────────────────────
+  (function() {
+    var nome = localStorage.getItem('nomeEscola');
+    if (nome) {
       var h1 = document.querySelector('.logo-text h1');
       if (h1) h1.textContent = nome;
-      var ok = document.getElementById('escola-salva-ok');
-      ok.style.display = 'block';
-      setTimeout(function(){ ok.style.display = 'none'; }, 2500);
     }
+  })();
 
-    (function() {
-      var nome = localStorage.getItem('nomeEscola');
-      if (nome) {
-        var h1 = document.querySelector('.logo-text h1');
-        if (h1) h1.textContent = nome;
-      }
-    })();
-
-    function toggleBloqueio(ativo) {
-      var tela = document.getElementById('bloqueio-tela');
-      if (!tela) return;
-      if (ativo) {
-        tela.classList.add('ativo');
-        localStorage.setItem('bloqueioAtivo', '1');
-      } else {
-        tela.classList.remove('ativo');
-        localStorage.setItem('bloqueioAtivo', '0');
-      }
-      var cb = document.getElementById('toggle-bloqueio');
-      if (cb) cb.checked = ativo;
+  function toggleBloqueio(ativo) {
+    var tela = document.getElementById('bloqueio-tela');
+    if (!tela) return;
+    if (ativo) {
+      tela.classList.add('ativo');
+      localStorage.setItem('bloqueioAtivo', '1');
+    } else {
+      tela.classList.remove('ativo');
+      localStorage.setItem('bloqueioAtivo', '0');
     }
+    var cb = document.getElementById('toggle-bloqueio');
+    if (cb) cb.checked = ativo;
+  }
 
-    (function() {
-      if (localStorage.getItem('bloqueioAtivo') === '1') {
-        toggleBloqueio(true);
-      }
-    })();
-  </script>
+  // Restaura estado do bloqueio ao carregar
+  (function() {
+    if (localStorage.getItem('bloqueioAtivo') === '1') {
+      toggleBloqueio(true);
+    }
+  })();
+</script>
+
+<!-- Tela de bloqueio de assinatura -->
+<div id="bloqueio-tela" class="bloqueio-overlay">
+  <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a0a2e);padding:32px;text-align:center">
+    <div style="font-size:64px;margin-bottom:24px">🔒</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#fff;margin-bottom:12px">Acesso Bloqueado</div>
+    <div style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;max-width:280px">
+      A assinatura deste aplicativo expirou.<br>Entre em contato com o suporte para reativar.
+    </div>
+    <div style="margin-top:32px;display:flex;align-items:center;gap:8px;color:#25D366;font-size:13px;font-weight:600">
+      <svg viewBox="0 0 24 24" fill="#25D366" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      (92) 99481-0508
+    </div>
+  </div>
+</div>
+
+<!-- Ícone oculto do Proprietário — canto inferior esquerdo, 2 cliques -->
+<div id="owner-trigger" onclick="ownerClick()" style="
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 8px);
+  left:10px;
+  width:36px;
+  height:36px;
+  z-index:3000;
+  cursor:default;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:transparent;
+  -webkit-tap-highlight-color:transparent;
+">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    stroke="rgba(128,128,128,0.12)" stroke-width="1.5"
+    stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+  </svg>
+</div>
+
+<script>
+  var _ownerClicks = 0, _ownerTimer = null;
+  function ownerClick() {
+    _ownerClicks++;
+    clearTimeout(_ownerTimer);
+    if (_ownerClicks >= 2) {
+      _ownerClicks = 0;
+      abrirAdminEtapa1();
+    } else {
+      _ownerTimer = setTimeout(function(){ _ownerClicks = 0; }, 600);
+    }
+  }
+</script>
 </body>
 </html>
