@@ -710,6 +710,11 @@
         return;
       }
 
+      if (timeToMinutes(horarioFim) <= timeToMinutes(horarioInicio)) {
+        showToast('O horário de término precisa ser depois do início.', 'error');
+        return;
+      }
+
       var ambiente = ambienteSelecionado === 'Outros'
         ? (document.getElementById('detalheAmbiente').value.trim() || 'Outros')
         : ambienteSelecionado;
