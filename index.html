@@ -431,8 +431,7 @@
       <div class="aviso-titulo">Já existe agendamento neste período</div>
       <div class="aviso-info" id="aviso-periodo-info"></div>
       <div class="aviso-buttons">
-        <button class="aviso-btn" onclick="fecharAvisoPeriodo()">Cancelar</button>
-        <button class="aviso-btn confirm" onclick="confirmarAvisoPeriodo()">Continuar mesmo assim</button>
+        <button class="aviso-btn confirm" style="flex:1" onclick="fecharAvisoPeriodo()">Entendi</button>
       </div>
     </div>
   </div>
@@ -549,7 +548,9 @@
         var df = item.data
           ? new Date(item.data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' })
           : '—';
-        var intervalo = (item.horarioInicio || item.horario || '—') + ' — ' + (item.horarioFim || item.horario || '—');
+        var intervalo = (item.horarioInicio && item.horarioFim)
+          ? (item.horarioInicio + ' — ' + item.horarioFim)
+          : ((item.horarioInicio || item.horario || '—') + ' (sem término registrado)');
         return '<div class="agenda-item">' +
           '<div class="agenda-item-header">' +
             '<div class="agenda-item-title">' + icon + ' ' + item.ambiente + '</div>' +
@@ -669,14 +670,6 @@
       var btn = document.getElementById('btn-salvar');
       btn.disabled = false;
       btn.innerHTML = '<span>Confirmar Reserva</span>';
-    }
-
-    function confirmarAvisoPeriodo() {
-      document.getElementById('aviso-periodo-modal').style.display = 'none';
-      if (_pendingAgendamento) {
-        _executarSalvar(_pendingAgendamento);
-        _pendingAgendamento = null;
-      }
     }
 
     function mostrarAvisoPeriodo(periodo, professorOcupado, horarioOcupado, ambienteOcupado, dadosPendentes) {
