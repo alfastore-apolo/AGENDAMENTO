@@ -119,31 +119,30 @@
     .btn-submit:active{transform:scale(.98);opacity:.9}
     .btn-submit:disabled{opacity:.5;cursor:default}
 
-    .relogios-container{display:flex;flex-direction:column;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:9px}
-    .relogio-duplo{display:flex;align-items:center;gap:10px;justify-content:space-between}
-    .relogio-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px}
-    .relogio-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-    .relogio-display{font-family:'DM Serif Display',serif;font-size:36px;letter-spacing:2px;color:var(--accent);line-height:1;display:flex;align-items:center;gap:2px}
-    .relogio-sep{animation:blink 1s step-end infinite;opacity:1}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-    .relogio-controles{display:flex;gap:6px;align-items:center}
-    .relogio-btn{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:32px;height:28px;color:var(--accent);font-size:14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-weight:600}
-    .relogio-btn:active{background:var(--chip-sel);transform:scale(.92)}
-    .relogio-seta{font-size:20px;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:arrowPulse 1.5s ease-in-out infinite}
-    @keyframes arrowPulse{0%,100%{opacity:.6;transform:translateX(0)}50%{opacity:1;transform:translateX(2px)}}
-    .duracao-info{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px}
+    .duracao-info{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:9px}
     .duracao-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
     .duracao-valor{font-size:14px;color:var(--accent);font-weight:600;font-family:'DM Serif Display',serif}
 
-    .rd-display{font-family:'DM Serif Display',serif;font-size:42px;letter-spacing:4px;color:var(--accent);line-height:1;display:flex;align-items:center;gap:4px;min-width:120px}
-    .rd-sep{animation:blink 1s step-end infinite;opacity:1}
-    .rd-pickers{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end}
-    .rd-col{display:flex;flex-direction:column;align-items:center;gap:5px}
-    .rd-arrow{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;width:36px;height:30px;color:var(--accent);font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
-    .rd-arrow:active{background:var(--chip-sel);transform:scale(.93)}
-    .rd-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-    .rd-now{background:var(--chip-sel);border:1.5px solid var(--accent);border-radius:10px;padding:7px 13px;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;align-self:center}
-    .rd-now:active{opacity:.75}
+    /* CALENDÁRIO */
+    #calendario-modal{display:none;position:fixed;inset:0;z-index:250;align-items:flex-end;justify-content:center}
+    #calendario-modal.open{display:flex}
+    .cal-sheet{position:relative;z-index:1;background:var(--bg2);border-radius:22px 22px 0 0;padding:0 0 calc(var(--safe-bot) + 18px);width:100%;max-width:480px;animation:slideUp .25s ease}
+    .cal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+    .cal-titulo{font-size:14px;font-weight:700;color:var(--text);text-transform:capitalize}
+    .cal-nav{display:flex;gap:6px}
+    .cal-nav-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:8px;width:30px;height:30px;font-size:15px;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .cal-nav-btn:active{background:var(--chip-sel)}
+    .cal-dias-semana{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:0 12px}
+    .cal-ds{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;padding:4px 0;letter-spacing:.04em}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px 12px 14px}
+    .cal-dia{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;cursor:pointer;position:relative;transition:background .15s;gap:2px;color:var(--text)}
+    .cal-dia:active{background:var(--chip-sel)}
+    .cal-dia.vazio{cursor:default}
+    .cal-dia.hoje{color:var(--accent);font-weight:700}
+    .cal-dia.selecionado{background:linear-gradient(135deg,var(--accent),var(--accent2))!important;color:#fff!important}
+    .cal-bolinha{width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0;display:none}
+    .cal-dia.tem-res .cal-bolinha{display:block}
+    .cal-dia.selecionado .cal-bolinha{background:rgba(255,255,255,.8)}
     #conflito-modal.open{display:flex!important}
     #toast{position:fixed;bottom:calc(var(--safe-bot) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:30px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;z-index:300;box-shadow:0 8px 30px rgba(0,0,0,.35)}
     #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -309,46 +308,25 @@
 
         <div class="form-section">
           <div class="section-label">Data e Horário</div>
-          <div class="field"><label>Data</label><input type="date" id="data"/></div>
-          
-          <div class="relogios-container">
-            <div class="relogio-duplo">
-              <div class="relogio-card">
-                <div class="relogio-label">Início</div>
-                <div class="relogio-display">
-                  <span id="rd-inicio-hh">10</span><span class="relogio-sep">:</span><span id="rd-inicio-mm">00</span>
-                </div>
-                <div class="relogio-controles">
-                  <button class="relogio-btn" onclick="rdStepInicio(5)">+</button>
-                  <button class="relogio-btn" onclick="rdStepInicio(-5)">−</button>
-                </div>
-              </div>
-              <div class="relogio-seta">→</div>
-              <div class="relogio-card">
-                <div class="relogio-label">Término</div>
-                <div class="relogio-display">
-                  <span id="rd-fim-hh">12</span><span class="relogio-sep">:</span><span id="rd-fim-mm">00</span>
-                </div>
-                <div class="relogio-controles">
-                  <button class="relogio-btn" onclick="rdStepFim(5)">+</button>
-                  <button class="relogio-btn" onclick="rdStepFim(-5)">−</button>
-                </div>
-              </div>
-            </div>
-            <div class="duracao-info">
-              <div class="duracao-label">Duração:</div>
-              <div class="duracao-valor" id="duracao-display">2h 00m</div>
-            </div>
+          <div class="field" onclick="abrirCalendario()" style="cursor:pointer">
+            <label>Data</label>
+            <input type="text" id="data-display" readonly placeholder="Selecionar data" style="cursor:pointer;caret-color:transparent" onclick="abrirCalendario()"/>
           </div>
+          <input type="hidden" id="data"/>
 
-          <input type="hidden" id="horarioInicio"/>
-          <input type="hidden" id="horarioFim"/>
+          <div class="field"><label>Horário de Início</label><input type="time" id="horarioInicio" onchange="atualizarDuracao()"/></div>
+          <div class="field"><label>Horário de Término</label><input type="time" id="horarioFim" onchange="atualizarDuracao()"/></div>
+          <div class="duracao-info" id="duracao-info" style="display:none">
+            <div class="duracao-label">Duração:</div>
+            <div class="duracao-valor" id="duracao-display"></div>
+          </div>
         </div>
 
         <div class="form-section">
           <div class="section-label">Detalhes</div>
-          <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
-          <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
+         <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
+          <div class="field"><label>Ano/Série</label><input type="text" id="anoSerie" placeholder="Ex: 7º Ano"/></div>
+          <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: B"/></div>
           <div class="field">
             <label>Descrição / Observações</label>
             <textarea id="descricao" rows="3" placeholder="Detalhes da atividade, materiais…"></textarea>
@@ -413,6 +391,23 @@
     </div>
   </div>
 
+  <!-- Modal Calendário -->
+  <div id="calendario-modal">
+    <div class="modal-backdrop" onclick="fecharCalendario()"></div>
+    <div class="cal-sheet">
+      <div class="modal-handle" style="margin-top:14px"></div>
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="calNavegar(-1)">‹</button>
+        <div class="cal-titulo" id="cal-titulo"></div>
+        <button class="cal-nav-btn" onclick="calNavegar(1)">›</button>
+      </div>
+      <div class="cal-dias-semana">
+        <div class="cal-ds">D</div><div class="cal-ds">S</div><div class="cal-ds">T</div><div class="cal-ds">Q</div><div class="cal-ds">Q</div><div class="cal-ds">S</div><div class="cal-ds">S</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+  </div>
+
   <!-- Modal Conflito -->
   <div id="conflito-modal">
     <div class="conflito-card">
@@ -461,8 +456,8 @@
     var rtStarted           = false;
     var deferredPrompt      = null;
 
-    var rdInicioH = 10, rdInicioM = 0;
-    var rdFimH = 12, rdFimM = 0;
+    var calAno, calMes;
+    var MESES_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
     function openThemeModal()  { document.getElementById('theme-modal').classList.add('open'); }
     function closeThemeModal() { document.getElementById('theme-modal').classList.remove('open'); }
@@ -561,7 +556,7 @@
           '</div>' +
           '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px">⏰ ' + intervalo + '</div>' +
           '<div class="agenda-item-prof">👤 ' + (item.professor || '—') + '</div>' +
-          (item.turma ? '<div style="font-size:12px;color:var(--muted)">👥 ' + item.turma + '</div>' : '') +
+          ((item.anoSerie || item.turma) ? '<div style="font-size:12px;color:var(--muted)">👥 ' + (item.anoSerie ? item.anoSerie + ' ' : '') + (item.turma || '') + '</div>' : '') +
           (item.descricao ? '<div class="agenda-item-desc">' + item.descricao + '</div>' : '') +
         '</div>';
       }).join('');
@@ -584,45 +579,95 @@
         });
     }
 
-    function rdPad(n) { return n < 10 ? '0' + n : '' + n; }
+    function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
-    function atualizarRelógios() {
-      document.getElementById('rd-inicio-hh').textContent = rdPad(rdInicioH);
-      document.getElementById('rd-inicio-mm').textContent = rdPad(rdInicioM);
-      document.getElementById('rd-fim-hh').textContent = rdPad(rdFimH);
-      document.getElementById('rd-fim-mm').textContent = rdPad(rdFimM);
-      document.getElementById('horarioInicio').value = rdPad(rdInicioH) + ':' + rdPad(rdInicioM);
-      document.getElementById('horarioFim').value = rdPad(rdFimH) + ':' + rdPad(rdFimM);
-      atualizarDuracao();
+    function isoHoje() {
+      var d = new Date();
+      return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+    }
+
+    function formatarDataBR(iso) {
+      var p = iso.split('-');
+      return p[2] + '/' + p[1] + '/' + p[0];
+    }
+
+    function definirData(iso) {
+      document.getElementById('data').value = iso;
+      document.getElementById('data-display').value = formatarDataBR(iso);
+    }
+
+    function abrirCalendario() {
+      var atual = document.getElementById('data').value || isoHoje();
+      var p = atual.split('-');
+      calAno = parseInt(p[0], 10);
+      calMes = parseInt(p[1], 10) - 1;
+      renderCalendario();
+      document.getElementById('calendario-modal').classList.add('open');
+    }
+
+    function fecharCalendario() {
+      document.getElementById('calendario-modal').classList.remove('open');
+    }
+
+    function calNavegar(delta) {
+      calMes += delta;
+      if (calMes < 0) { calMes = 11; calAno--; }
+      if (calMes > 11) { calMes = 0; calAno++; }
+      renderCalendario();
+    }
+
+    function renderCalendario() {
+      document.getElementById('cal-titulo').textContent = MESES_PT[calMes] + ' ' + calAno;
+      var primeiroDia = new Date(calAno, calMes, 1).getDay();
+      var totalDias = new Date(calAno, calMes + 1, 0).getDate();
+      var hojeIso = isoHoje();
+      var selecionadoIso = document.getElementById('data').value;
+      var diasComReserva = {};
+      todosItens.forEach(function(item) {
+        if (item.data) {
+          var pp = item.data.split('-');
+          if (parseInt(pp[0], 10) === calAno && parseInt(pp[1], 10) - 1 === calMes) {
+            diasComReserva[parseInt(pp[2], 10)] = true;
+          }
+        }
+      });
+      var html = '';
+      for (var i = 0; i < primeiroDia; i++) { html += '<div class="cal-dia vazio"></div>'; }
+      for (var dia = 1; dia <= totalDias; dia++) {
+        var iso = calAno + '-' + pad2(calMes + 1) + '-' + pad2(dia);
+        var classes = 'cal-dia';
+        if (iso === hojeIso) classes += ' hoje';
+        if (iso === selecionadoIso) classes += ' selecionado';
+        if (diasComReserva[dia]) classes += ' tem-res';
+        html += '<div class="' + classes + '" onclick="selecionarDiaCal(' + dia + ')">' +
+                  '<span>' + dia + '</span><span class="cal-bolinha"></span>' +
+                '</div>';
+      }
+      document.getElementById('cal-grid').innerHTML = html;
+    }
+
+    function selecionarDiaCal(dia) {
+      var iso = calAno + '-' + pad2(calMes + 1) + '-' + pad2(dia);
+      definirData(iso);
+      fecharCalendario();
     }
 
     function atualizarDuracao() {
-      var inicioMin = rdInicioH * 60 + rdInicioM;
-      var fimMin = rdFimH * 60 + rdFimM;
+      var ini = document.getElementById('horarioInicio').value;
+      var fim = document.getElementById('horarioFim').value;
+      var info = document.getElementById('duracao-info');
+      if (!ini || !fim) { info.style.display = 'none'; return; }
+      var inicioMin = timeToMinutes(ini);
+      var fimMin = timeToMinutes(fim);
       var duracao = fimMin - inicioMin;
-      if (duracao < 0) duracao += 24 * 60;
+      if (duracao <= 0) { info.style.display = 'none'; return; }
       var horas = Math.floor(duracao / 60);
       var minutos = duracao % 60;
       var duracaoStr = '';
       if (horas > 0) duracaoStr += horas + 'h ';
-      duracaoStr += minutos + 'm';
+      duracaoStr += pad2(minutos) + 'm';
       document.getElementById('duracao-display').textContent = duracaoStr;
-    }
-
-    function rdStepInicio(delta) {
-      rdInicioM = (rdInicioM + delta + 60) % 60;
-      if (rdInicioM + delta < 0 || rdInicioM + delta >= 60) {
-        rdInicioH = (rdInicioH + Math.floor((rdInicioM + delta) / 60) + 24) % 24;
-      }
-      atualizarRelógios();
-    }
-
-    function rdStepFim(delta) {
-      rdFimM = (rdFimM + delta + 60) % 60;
-      if (rdFimM + delta < 0 || rdFimM + delta >= 60) {
-        rdFimH = (rdFimH + Math.floor((rdFimM + delta) / 60) + 24) % 24;
-      }
-      atualizarRelógios();
+      info.style.display = 'flex';
     }
 
     function mostrarConflitoSobreposicao(ambiente, data, horarioExistente, professor) {
@@ -697,9 +742,11 @@
       var horarioInicio  = document.getElementById('horarioInicio').value;
       var horarioFim     = document.getElementById('horarioFim').value;
       var professor      = document.getElementById('professor').value.trim();
+      var anoSerie       = document.getElementById('anoSerie').value.trim();
+      var turma          = document.getElementById('turma').value.trim();
 
-      if (!data || !horarioInicio || !horarioFim || !professor) {
-        showToast('Preencha data, horários e nome do professor.', 'error');
+      if (!data || !horarioInicio || !horarioFim || !professor || !anoSerie || !turma) {
+        showToast('Preencha data, horários, professor, ano/série e turma.', 'error');
         return;
       }
 
@@ -783,7 +830,8 @@
           var dadosPendentes = {
             ambiente:       ambiente,
             professor:      professor,
-            turma:          document.getElementById('turma').value.trim(),
+            anoSerie:       anoSerie,
+            turma:          turma,
             data:           data,
             horarioInicio:  horarioInicio,
             horarioFim:     horarioFim,
@@ -813,6 +861,7 @@
       db.collection('agendamentos').add({
         ambiente:       d.ambiente,
         professor:      d.professor,
+        anoSerie:       d.anoSerie,
         turma:          d.turma,
         data:           d.data,
         horarioInicio:  d.horarioInicio,
@@ -821,16 +870,16 @@
         criado_em:      firebase.firestore.FieldValue.serverTimestamp()
       }).then(function() {
         showToast('✅ Reserva confirmada!');
-        ['professor','turma','descricao','detalheAmbiente'].forEach(function(id) {
+        ['professor','anoSerie','turma','descricao','detalheAmbiente'].forEach(function(id) {
           var el = document.getElementById(id); if (el) el.value = '';
         });
-        rdInicioH = 10; rdInicioM = 0;
-        rdFimH = 12; rdFimM = 0;
-        atualizarRelógios();
+        document.getElementById('horarioInicio').value = '';
+        document.getElementById('horarioFim').value = '';
+        atualizarDuracao();
         document.querySelectorAll('.chip').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
         ambienteSelecionado = 'Biblioteca';
         document.getElementById('campo-outros').style.display = 'none';
-        document.getElementById('data').valueAsDate = new Date();
+        definirData(isoHoje());
       }).catch(function(e) {
         showToast('Erro ao salvar: ' + e.message, 'error');
       }).finally(function() {
@@ -858,8 +907,9 @@
       deferredPrompt.userChoice.then(function() { deferredPrompt = null; dismissInstall(); });
     });
 
-    document.getElementById('data').valueAsDate = new Date();
-    atualizarRelógios();
+    definirData(isoHoje());
+    atualizarDuracao();
+    iniciarTempoReal();
   </script>
 
   <script>
