@@ -325,8 +325,7 @@
         <div class="form-section">
           <div class="section-label">Detalhes</div>
          <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
-          <div class="field"><label>Ano/Série</label><input type="text" id="anoSerie" placeholder="Ex: 7º Ano"/></div>
-          <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: B"/></div>
+          <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
           <div class="field">
             <label>Descrição / Observações</label>
             <textarea id="descricao" rows="3" placeholder="Detalhes da atividade, materiais…"></textarea>
@@ -556,7 +555,7 @@
           '</div>' +
           '<div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px">⏰ ' + intervalo + '</div>' +
           '<div class="agenda-item-prof">👤 ' + (item.professor || '—') + '</div>' +
-          ((item.anoSerie || item.turma) ? '<div style="font-size:12px;color:var(--muted)">👥 ' + (item.anoSerie ? item.anoSerie + ' ' : '') + (item.turma || '') + '</div>' : '') +
+         (item.turma ? '<div style="font-size:12px;color:var(--muted)">👥 ' + item.turma + '</div>' : '') +
           (item.descricao ? '<div class="agenda-item-desc">' + item.descricao + '</div>' : '') +
         '</div>';
       }).join('');
@@ -742,10 +741,9 @@
       var horarioInicio  = document.getElementById('horarioInicio').value;
       var horarioFim     = document.getElementById('horarioFim').value;
       var professor      = document.getElementById('professor').value.trim();
-      var anoSerie       = document.getElementById('anoSerie').value.trim();
-      var turma          = document.getElementById('turma').value.trim();
+var turma          = document.getElementById('turma').value.trim();
 
-      if (!data || !horarioInicio || !horarioFim || !professor || !anoSerie || !turma) {
+if (!data || !horarioInicio || !horarioFim || !professor || !turma) {
         showToast('Preencha data, horários, professor, ano/série e turma.', 'error');
         return;
       }
@@ -828,10 +826,9 @@
           }
 
           var dadosPendentes = {
-            ambiente:       ambiente,
-            professor:      professor,
-            anoSerie:       anoSerie,
-            turma:          turma,
+  ambiente:       ambiente,
+  professor:      professor,
+  turma:          turma,
             data:           data,
             horarioInicio:  horarioInicio,
             horarioFim:     horarioFim,
@@ -861,7 +858,6 @@
       db.collection('agendamentos').add({
         ambiente:       d.ambiente,
         professor:      d.professor,
-        anoSerie:       d.anoSerie,
         turma:          d.turma,
         data:           d.data,
         horarioInicio:  d.horarioInicio,
