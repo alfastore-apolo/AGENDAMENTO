@@ -101,13 +101,6 @@
     .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500}
     .field input,.field textarea{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:0;appearance:none;-webkit-appearance:none}
     .field textarea{resize:none;line-height:1.5}
-    .field input[type="date"],.field input[type="time"]{color-scheme:dark}
-    [data-theme="claro"] .field input[type="date"],
-    [data-theme="claro"] .field input[type="time"],
-    [data-theme="turquesa"] .field input[type="date"],
-    [data-theme="turquesa"] .field input[type="time"],
-    [data-theme="rosa"] .field input[type="date"],
-    [data-theme="rosa"] .field input[type="time"]{color-scheme:light}
 
     .ambiente-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
     .chip{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:11px 10px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
@@ -254,6 +247,21 @@
     .alfa-dev-label{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .alfa-whatsapp{display:flex;align-items:center;gap:6px;color:var(--accent);text-decoration:none;font-weight:600;transition:opacity .2s;flex-shrink:0}
     .alfa-whatsapp:active{opacity:.7}
+
+    /* TIME PICKER */
+    #timepicker-modal{display:none;position:fixed;inset:0;z-index:260;align-items:flex-end;justify-content:center}
+    .tp-sheet{position:relative;z-index:1;background:var(--bg2);border-radius:22px 22px 0 0;padding:0 0 calc(var(--safe-bot) + 18px);width:100%;max-width:480px;animation:slideUp .25s ease}
+    .tp-spinners{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 20px 12px}
+    .tp-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+    .tp-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:12px;width:64px;height:40px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .tp-btn:active{background:var(--chip-sel)}
+    .tp-num{font-family:'DM Serif Display',serif;font-size:48px;color:var(--text);width:80px;text-align:center;font-weight:700;line-height:1}
+    .tp-sep{font-family:'DM Serif Display',serif;font-size:48px;color:var(--muted);font-weight:700;margin-bottom:4px;line-height:1}
+    .tp-shortcuts{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 14px;justify-content:center}
+    .tp-sc{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .tp-sc:active{background:var(--chip-sel);color:var(--accent)}
+    .tp-confirm{margin:0 16px;width:calc(100% - 32px);padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s}
+    .tp-confirm:active{transform:scale(.98);opacity:.9}
   </style>
 </head>
 
@@ -314,8 +322,20 @@
           </div>
           <input type="hidden" id="data"/>
 
-          <div class="field"><label>Horário de Início</label><input type="time" id="horarioInicio" onchange="atualizarDuracao()"/></div>
-          <div class="field"><label>Horário de Término</label><input type="time" id="horarioFim" onchange="atualizarDuracao()"/></div>
+          <!-- Horário de Início — time picker customizado -->
+          <div class="field" style="cursor:pointer" onclick="abrirTimePicker('inicio')">
+            <label>Horário de Início</label>
+            <input type="text" id="horarioInicio-display" readonly placeholder="Selecionar horário" style="cursor:pointer;caret-color:transparent"/>
+            <input type="hidden" id="horarioInicio"/>
+          </div>
+
+          <!-- Horário de Término — time picker customizado -->
+          <div class="field" style="cursor:pointer" onclick="abrirTimePicker('fim')">
+            <label>Horário de Término</label>
+            <input type="text" id="horarioFim-display" readonly placeholder="Selecionar horário" style="cursor:pointer;caret-color:transparent"/>
+            <input type="hidden" id="horarioFim"/>
+          </div>
+
           <div class="duracao-info" id="duracao-info" style="display:none">
             <div class="duracao-label">Duração:</div>
             <div class="duracao-valor" id="duracao-display"></div>
@@ -324,7 +344,7 @@
 
         <div class="form-section">
           <div class="section-label">Detalhes</div>
-         <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
+          <div class="field"><label>Nome do Professor</label><input type="text" id="professor" placeholder="Ex: Prof. Ana Lima"/></div>
           <div class="field"><label>Turma</label><input type="text" id="turma" placeholder="Ex: 7º Ano B"/></div>
           <div class="field">
             <label>Descrição / Observações</label>
@@ -407,6 +427,45 @@
     </div>
   </div>
 
+  <!-- Modal Time Picker -->
+  <div id="timepicker-modal">
+    <div class="modal-backdrop" onclick="fecharTimePicker()"></div>
+    <div class="tp-sheet">
+      <div class="modal-handle" style="margin-top:14px"></div>
+      <div class="cal-header">
+        <div class="cal-titulo" id="tp-titulo">Horário de Início</div>
+      </div>
+      <div class="tp-spinners">
+        <div class="tp-col">
+          <button class="tp-btn" onclick="tpChange('h',1)">▲</button>
+          <div class="tp-num" id="tp-hora">07</div>
+          <button class="tp-btn" onclick="tpChange('h',-1)">▼</button>
+        </div>
+        <div class="tp-sep">:</div>
+        <div class="tp-col">
+          <button class="tp-btn" onclick="tpChange('m',5)">▲</button>
+          <div class="tp-num" id="tp-min">00</div>
+          <button class="tp-btn" onclick="tpChange('m',-5)">▼</button>
+        </div>
+      </div>
+      <div class="tp-shortcuts">
+        <button class="tp-sc" onclick="tpSetHora(7,0)">07:00</button>
+        <button class="tp-sc" onclick="tpSetHora(7,30)">07:30</button>
+        <button class="tp-sc" onclick="tpSetHora(8,0)">08:00</button>
+        <button class="tp-sc" onclick="tpSetHora(9,0)">09:00</button>
+        <button class="tp-sc" onclick="tpSetHora(10,0)">10:00</button>
+        <button class="tp-sc" onclick="tpSetHora(11,0)">11:00</button>
+        <button class="tp-sc" onclick="tpSetHora(12,0)">12:00</button>
+        <button class="tp-sc" onclick="tpSetHora(13,0)">13:00</button>
+        <button class="tp-sc" onclick="tpSetHora(14,0)">14:00</button>
+        <button class="tp-sc" onclick="tpSetHora(15,0)">15:00</button>
+        <button class="tp-sc" onclick="tpSetHora(16,0)">16:00</button>
+        <button class="tp-sc" onclick="tpSetHora(17,0)">17:00</button>
+      </div>
+      <button class="tp-confirm" onclick="confirmarTimePicker()">Confirmar</button>
+    </div>
+  </div>
+
   <!-- Modal Conflito -->
   <div id="conflito-modal">
     <div class="conflito-card">
@@ -457,6 +516,62 @@
 
     var calAno, calMes;
     var MESES_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+    // ── Time Picker ──────────────────────────────────────────
+    var _tpAlvo = 'inicio';
+    var _tpH = 7, _tpM = 0;
+
+    function abrirTimePicker(alvo) {
+      _tpAlvo = alvo;
+      var campo = alvo === 'inicio' ? 'horarioInicio' : 'horarioFim';
+      var val = document.getElementById(campo).value;
+      if (val) {
+        var p = val.split(':');
+        _tpH = parseInt(p[0], 10);
+        _tpM = parseInt(p[1], 10);
+      } else {
+        _tpH = alvo === 'inicio' ? 7 : 8;
+        _tpM = 0;
+      }
+      document.getElementById('tp-titulo').textContent =
+        alvo === 'inicio' ? 'Horário de Início' : 'Horário de Término';
+      tpRender();
+      document.getElementById('timepicker-modal').style.display = 'flex';
+    }
+
+    function fecharTimePicker() {
+      document.getElementById('timepicker-modal').style.display = 'none';
+    }
+
+    function tpRender() {
+      document.getElementById('tp-hora').textContent = pad2(_tpH);
+      document.getElementById('tp-min').textContent  = pad2(_tpM);
+    }
+
+    function tpChange(tipo, delta) {
+      if (tipo === 'h') {
+        _tpH = (_tpH + delta + 24) % 24;
+      } else {
+        _tpM = (_tpM + delta + 60) % 60;
+      }
+      tpRender();
+    }
+
+    function tpSetHora(h, m) {
+      _tpH = h; _tpM = m;
+      tpRender();
+    }
+
+    function confirmarTimePicker() {
+      var val     = pad2(_tpH) + ':' + pad2(_tpM);
+      var campo   = _tpAlvo === 'inicio' ? 'horarioInicio'         : 'horarioFim';
+      var display = _tpAlvo === 'inicio' ? 'horarioInicio-display' : 'horarioFim-display';
+      document.getElementById(campo).value   = val;
+      document.getElementById(display).value = val;
+      fecharTimePicker();
+      atualizarDuracao();
+    }
+    // ─────────────────────────────────────────────────────────
 
     function openThemeModal()  { document.getElementById('theme-modal').classList.add('open'); }
     function closeThemeModal() { document.getElementById('theme-modal').classList.remove('open'); }
@@ -741,9 +856,9 @@
       var horarioInicio  = document.getElementById('horarioInicio').value;
       var horarioFim     = document.getElementById('horarioFim').value;
       var professor      = document.getElementById('professor').value.trim();
-var turma          = document.getElementById('turma').value.trim();
+      var turma          = document.getElementById('turma').value.trim();
 
-if (!data || !horarioInicio || !horarioFim || !professor || !turma) {
+      if (!data || !horarioInicio || !horarioFim || !professor || !turma) {
         showToast('Preencha data, horários, professor, ano/série e turma.', 'error');
         return;
       }
@@ -826,9 +941,9 @@ if (!data || !horarioInicio || !horarioFim || !professor || !turma) {
           }
 
           var dadosPendentes = {
-  ambiente:       ambiente,
-  professor:      professor,
-  turma:          turma,
+            ambiente:       ambiente,
+            professor:      professor,
+            turma:          turma,
             data:           data,
             horarioInicio:  horarioInicio,
             horarioFim:     horarioFim,
@@ -866,11 +981,13 @@ if (!data || !horarioInicio || !horarioFim || !professor || !turma) {
         criado_em:      firebase.firestore.FieldValue.serverTimestamp()
       }).then(function() {
         showToast('✅ Reserva confirmada!');
-        ['professor','anoSerie','turma','descricao','detalheAmbiente'].forEach(function(id) {
+        ['professor','turma','descricao','detalheAmbiente'].forEach(function(id) {
           var el = document.getElementById(id); if (el) el.value = '';
         });
         document.getElementById('horarioInicio').value = '';
         document.getElementById('horarioFim').value = '';
+        document.getElementById('horarioInicio-display').value = '';
+        document.getElementById('horarioFim-display').value = '';
         atualizarDuracao();
         document.querySelectorAll('.chip').forEach(function(c, i) { c.classList.toggle('selected', i === 0); });
         ambienteSelecionado = 'Biblioteca';
