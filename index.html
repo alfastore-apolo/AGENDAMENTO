@@ -901,7 +901,8 @@
             var agInicioMin = timeToMinutes(agInicioStr);
             var agFimMin    = timeToMinutes(agFimStr);
 
-            if (agAmbiente === ambienteNorm && temSobreposicao(inicioMin, fimMin, agInicioMin, agFimMin) && !conflitoLocal) {
+                        var MARGEM_MIN = 30;
+            if (agAmbiente === ambienteNorm && temSobreposicao(inicioMin - MARGEM_MIN, fimMin + MARGEM_MIN, agInicioMin, agFimMin) && !conflitoLocal) {
               conflitoLocal = ag;
             }
             if (agProfessor === professorNorm && temSobreposicao(inicioMin, fimMin, agInicioMin, agFimMin) && !conflitoProf) {
@@ -925,22 +926,7 @@
             return;
           }
 
-          var periodoNovo = getPeriodo(horarioInicioNorm);
-          var avisoPeriodo = null;
-          if (periodoNovo !== 'outro') {
-            snap.forEach(function(d) {
-              if (avisoPeriodo) return;
-              var ag = d.data();
-              var agProfNorm = (ag.professor || '').trim().toLowerCase();
-              var agAmbNorm  = (ag.ambiente  || '').trim().toLowerCase();
-              var agPeriodo  = getPeriodo((ag.horarioInicio || ag.horario || '').trim());
-              if (agAmbNorm === ambienteNorm && agPeriodo === periodoNovo && agProfNorm !== professorNorm) {
-                avisoPeriodo = ag;
-              }
-            });
-          }
-
-          var dadosPendentes = {
+                   var dadosPendentes = {
             ambiente:       ambiente,
             professor:      professor,
             turma:          turma,
@@ -949,14 +935,6 @@
             horarioFim:     horarioFim,
             descricao:      document.getElementById('descricao').value.trim()
           };
-
-          if (avisoPeriodo) {
-            btn.disabled = false;
-            btn.innerHTML = '<span>Confirmar Reserva</span>';
-            var intervaloAviso = (avisoPeriodo.horarioInicio || avisoPeriodo.horario || '—') + ' — ' + (avisoPeriodo.horarioFim || avisoPeriodo.horario || '—');
-            mostrarAvisoPeriodo(periodoNovo, avisoPeriodo.professor || '—', intervaloAviso, avisoPeriodo.ambiente || '—', dadosPendentes);
-            return;
-          }
 
           _executarSalvar(dadosPendentes);
         }).catch(function(e) {
