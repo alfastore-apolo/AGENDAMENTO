@@ -481,7 +481,7 @@
   <div id="aviso-periodo-modal">
     <div class="aviso-card">
       <div class="aviso-icone">⚠️</div>
-      <div class="aviso-titulo">Já existe agendamento neste período</div>
+      <div class="aviso-titulo">Agendamento próximo neste ambiente</div>
       <div class="aviso-info" id="aviso-periodo-info"></div>
       <div class="aviso-buttons">
         <button class="aviso-btn confirm" style="flex:1" onclick="fecharAvisoPeriodo()">Entendi</button>
@@ -831,11 +831,9 @@
       btn.innerHTML = '<span>Confirmar Reserva</span>';
     }
 
-    function mostrarAvisoPeriodo(periodo, professorOcupado, horarioOcupado, ambienteOcupado, dadosPendentes) {
-      var periodoLabel = periodo === 'manhã' ? '☀️ Manhã (07h–11h50)' : '🌤 Tarde (12h–17h50)';
+    function mostrarAvisoPeriodo(professorOcupado, horarioOcupado, ambienteOcupado, dadosPendentes) {
       document.getElementById('aviso-periodo-info').innerHTML =
-        'Já existe agendamento no período da <strong>' + periodo + '</strong>:<br><br>' +
-        periodoLabel + '<br>' +
+        'Este ambiente tem um agendamento próximo (intervalo mínimo de 1h):<br><br>' +
         '⏰ ' + horarioOcupado + ' — <strong>' + professorOcupado + '</strong><br>' +
         'em <strong>' + ambienteOcupado + '</strong>';
       _pendingAgendamento = dadosPendentes;
@@ -844,6 +842,12 @@
 
     function temSobreposicao(inicio1, fim1, inicio2, fim2) {
       return inicio1 < fim2 && fim1 > inicio2;
+    }
+
+    // Bloqueia apenas se houver menos de "margem" minutos de intervalo
+    // entre os dois agendamentos (em vez de bloquear o período inteiro).
+    function temConflitoComMargem(inicio1, fim1, inicio2, fim2, margem) {
+      return inicio1 < (fim2 + margem) && (fim1 + margem) > inicio2;
     }
 
     function timeToMinutes(timeStr) {
@@ -925,20 +929,20 @@
             return;
           }
 
-          var periodoNovo = getPeriodo(horarioInicioNorm);
+          var MARGEM_MIN = 60; // 1 hora de intervalo mínimo entre agendamentos diferentes no mesmo ambiente
           var avisoPeriodo = null;
-          if (periodoNovo !== 'outro') {
-            snap.forEach(function(d) {
-              if (avisoPeriodo) return;
-              var ag = d.data();
-              var agProfNorm = (ag.professor || '').trim().toLowerCase();
-              var agAmbNorm  = (ag.ambiente  || '').trim().toLowerCase();
-              var agPeriodo  = getPeriodo((ag.horarioInicio || ag.horario || '').trim());
-              if (agAmbNorm === ambienteNorm && agPeriodo === periodoNovo && agProfNorm !== professorNorm) {
-                avisoPeriodo = ag;
-              }
-            });
-          }
+          snap.forEach(function(d) {
+            if (avisoPeriodo) return;
+            var ag = d.data();
+            var agProfNorm = (ag.professor || '').trim().toLowerCase();
+            var agAmbNorm  = (ag.ambiente  || '').trim().toLowerCase();
+            if (agAmbNorm !== ambienteNorm || agProfNorm === professorNorm) return;
+            var agInicioMin = timeToMinutes((ag.horarioInicio || ag.horario || '').trim());
+            var agFimMin    = timeToMinutes((ag.horarioFim || ag.horario || '').trim());
+            if (temConflitoComMargem(inicioMin, fimMin, agInicioMin, agFimMin, MARGEM_MIN)) {
+              avisoPeriodo = ag;
+            }
+          });
 
           var dadosPendentes = {
             ambiente:       ambiente,
@@ -954,7 +958,7 @@
             btn.disabled = false;
             btn.innerHTML = '<span>Confirmar Reserva</span>';
             var intervaloAviso = (avisoPeriodo.horarioInicio || avisoPeriodo.horario || '—') + ' — ' + (avisoPeriodo.horarioFim || avisoPeriodo.horario || '—');
-            mostrarAvisoPeriodo(periodoNovo, avisoPeriodo.professor || '—', intervaloAviso, avisoPeriodo.ambiente || '—', dadosPendentes);
+            mostrarAvisoPeriodo(avisoPeriodo.professor || '—', intervaloAviso, avisoPeriodo.ambiente || '—', dadosPendentes);
             return;
           }
 
